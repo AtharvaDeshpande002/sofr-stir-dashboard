@@ -1,0 +1,9 @@
+*.xlsx
+*.xlsm
+*.db
+*.db-*
+positions/
+pnl_history/
+history/
+sofr_live.json
+__pycache__/

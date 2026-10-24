@@ -1,0 +1,233 @@
+SOFR / STIR TRADING DASHBOARD — PRESENTATION SCRIPT
+====================================================
+
+For: a Claude agent that will turn this into presentation points / slides.
+Purpose: show what I built, why it matters for trading, and what it says about how I work.
+Tone: a portfolio / resume piece. Explain importance and usefulness, not implementation detail.
+Please do not include positions, P&L figures, firm names, network paths or any client data.
+
+
+----------------------------------------------------------------------
+1. WHO I AM AND WHAT I TRADE
+----------------------------------------------------------------------
+
+I am a proprietary trader in US short-term interest rate futures (STIR):
+  - SR3 — 3-month SOFR futures (the market's view of the Fed's rate path, quarter by quarter)
+  - ZQ  — 30-day Fed Funds futures (pricing individual FOMC meetings)
+  - VX  — VIX futures (volatility term structure)
+
+My style is relative value on the mid and long end of the curve: spreads, butterflies,
+double flies and multi-leg packages, rather than outright direction. The edge in this kind
+of trading comes from knowing, at any moment, which part of the curve is cheap or rich
+against its neighbours, its own history and the economic calendar — and from acting with
+discipline when that is the case.
+
+No off-the-shelf platform gave me that view in one place, so I designed and built my own.
+
+
+----------------------------------------------------------------------
+2. THE PROBLEM
+----------------------------------------------------------------------
+
+Before the dashboard, a typical morning meant:
+  - several Excel workbooks (live prices, settles, positions, P&L) open at once;
+  - mentally converting outright prices into spreads, flies and structures;
+  - no quick way to answer "is this fly expensive versus its history?" or "how did this part
+    of the curve behave on the last five hot CPI prints?";
+  - risk spread across many structures, with no single picture of where the book was
+    actually exposed on the curve;
+  - historical data refreshed by hand.
+
+Result: slow decisions, decisions driven by feel, and mistakes that come from fatigue —
+especially trading US hours from India.
+
+
+----------------------------------------------------------------------
+3. THE SOLUTION IN ONE SENTENCE
+----------------------------------------------------------------------
+
+A single browser-based trading cockpit that combines live market data, years of settlement
+history, my book, the economic calendar and quantitative models — so every trade starts from
+evidence, has a defined risk, and can be explained to a mentor in a few lines.
+
+
+----------------------------------------------------------------------
+4. HOW IT IS BUILT (KEEP THIS HIGH LEVEL)
+----------------------------------------------------------------------
+
+  - Live layer: a small Python service reads live prices, settlements, meeting pricing, VIX
+    and my positions straight from the trading workbook every few seconds and publishes them
+    to the dashboard. The dashboard updates without anyone touching Excel.
+  - History layer: a self-updating market database (years of SR3, VIX and economic-release
+    history) is exported automatically when a new day is published. No manual refresh.
+  - Front end: one fast HTML/JavaScript application with charts, served on the office
+    network so it opens in any browser. Private data (positions, P&L) stays on my machine.
+  - Analytics: statistics, ranges, z-scores, mean-reversion half-lives, principal component
+    analysis (PCA), walk-forward backtests and event studies, all computed in the browser.
+  - AI agents: specialised Claude agents that write a daily curve report, an open-interest
+    report and a mentor-ready "trade check" for any structure I'm considering.
+  - Design: a calm, compact "graphite" theme built for long sessions — information-dense
+    without scrolling, colour used only where it carries meaning.
+
+Skills shown: market structure knowledge, quantitative modelling, Python, JavaScript,
+data engineering, UI/UX design, and using AI agents as part of a real trading workflow.
+
+
+----------------------------------------------------------------------
+5. THE TABS — WHAT EACH DOES AND WHY IT MATTERS
+----------------------------------------------------------------------
+
+The dashboard is grouped into three sections: LIVE, ANALYSIS and TRADING.
+
+LIVE ------------------------------------------------------------------
+
+5.1 CURVE
+  What: the live SOFR curve of 3-month spreads against yesterday's settlement, with my
+  positions drawn on it and a live P&L chart split by structure.
+  Why it matters: one glance tells me what the market did today, where I am exposed and
+  which structure is making or losing money. Positions are shown decomposed into the 3M
+  spreads they really represent, so hidden concentrations become visible.
+
+5.2 OPPORTUNITIES
+  What: an always-on scanner with two independent methods.
+    - Range signals: flags structures stretched to the edge of their own recent range,
+      with an honest track record of how that rule has performed on each structure.
+    - PCA rich/cheap: models the whole curve's common movements and ranks structures by
+      what the model cannot explain — genuine relative-value dislocations.
+  Built-in safeguards: robustness across model settings, an out-of-sample (walk-forward)
+  backtest, a regime check against the 2022–23 Fed hiking cycle, cost-adjusted "net edge",
+  stop guidance from history, and grouping so one dislocation isn't counted ten times.
+  Why it matters: it turns "I think this looks cheap" into a ranked, tested, cost-aware list
+  — and, just as importantly, tells me when there is no trade.
+
+5.3 ZQ MEETINGS
+  What: live pricing of each upcoming FOMC meeting and the meeting-to-meeting structures
+  (next meeting vs the one after, ratios).
+  Why it matters: shows exactly which meeting the market is repricing, which explains a lot
+  of the curve's daily moves.
+
+5.4 VIX
+  What: the VIX futures curve with spreads, flies, double flies and ratio structures, plus
+  seasonality — how the same structure behaved in previous years as expiry approached —
+  with percentile rankings and interactive filtering of outlier years.
+  Why it matters: volatility structures are seasonal and expiry-driven; this puts today's
+  price in that context immediately.
+
+ANALYSIS --------------------------------------------------------------
+
+5.5 SCENARIO
+  What: an interactive sandbox. Drag FOMC meeting outcomes, roll, shift or twist the curve,
+  and see how every structure — and my book — would reprice. A "Best Trades" view then
+  ranks the structures that benefit most from the scenario I built.
+  Why it matters: lets me plan trades around a view ("what if CPI is hot and the Fed hikes
+  in December?") before the event, rather than react after it.
+
+5.6 SR3 HISTORY
+  What: the full curve on any two dates side by side, from the settlement database.
+  Why it matters: quick answers to "what did the curve look like before the last hiking
+  cycle?" or "how much has this part of the curve moved since the last FOMC?".
+
+5.7 T&S HISTORY
+  What: time-and-sales analysis — where buying and selling volume has been concentrated —
+  plus a live flow strip.
+  Why it matters: shows who is active and where, so I can tell a real move from thin
+  liquidity.
+
+5.8 ECON
+  What: the economic calendar with actual vs consensus history for every major release, and
+  an Event Playbook: on past hot and soft prints (CPI, payrolls, PCE…), how every part of the
+  curve moved, how reliably, and what that would mean for my current book.
+  Why it matters: this market moves on data. Knowing in advance which structures react, and
+  by how much, is the difference between planning a trade and gambling on a number.
+
+TRADING ---------------------------------------------------------------
+
+5.9 RV BUILDER
+  What: build any multi-leg package from spreads and flies, with its exact contract order,
+  its net exposure in 3-month spreads, its full history on the actual contracts (correctly
+  handling quarterly rolls), range statistics, mean-reversion speed and sensitivity to the
+  rate level. Extra views find delta-neutral combinations and compare the same package
+  across every point of the curve.
+  Why it matters: this is where an idea becomes a precise, sized, hedged trade.
+
+5.10 TRADE
+  What: a trade-planning board — scaling-in ladders, exits and stop levels for a position.
+  Why it matters: risk and exits are decided before entry, not during the trade.
+
+
+----------------------------------------------------------------------
+6. HOW I USE IT IN A TRADING DAY
+----------------------------------------------------------------------
+
+  1. Check the data is live.
+  2. Context: what moved, what the Fed meetings price, what data is due (Curve, ZQ, Econ).
+  3. Candidates: Opportunities (PCA and range), with robustness and track record.
+  4. Stress-test: does it survive other model settings, the hiking-cycle comparison,
+     fixed-contract history, and is there a real reason (meeting, event, flow) behind it?
+  5. Price it in the RV Builder against trading costs; check contract limits.
+  6. Write the plan — entry, target, stop, time stop — and get a mentor-ready summary from the
+     trade-check agent.
+  7. Execute, then monitor on Curve and the residual history until target, stop or time.
+
+
+----------------------------------------------------------------------
+7. WHAT MAKES IT DIFFERENT
+----------------------------------------------------------------------
+
+  - Built by the trader who uses it: every feature answers a real question I had at the desk.
+  - Honest analytics: in-sample vs out-of-sample is explicit; costs are subtracted; the tool
+    says "no trade" when there isn't one. Several ideas were tested and dropped because the
+    evidence didn't support them.
+  - Regime awareness: signals are judged against comparable Fed-hiking environments, not
+    against whatever history happens to be in the window.
+  - Correct market mechanics: quarterly contract rolls, generic vs fixed contracts, and
+    contract-level exposure are handled properly — common sources of false signals.
+  - Automation end to end: live feed, history database, reports and checks run without
+    manual data work.
+  - Designed for focus: compact, readable, no unnecessary scrolling — built for long sessions.
+
+
+----------------------------------------------------------------------
+8. IMPACT ON MY TRADING
+----------------------------------------------------------------------
+
+  - Faster preparation: the morning routine went from juggling workbooks to one screen.
+  - Better decisions: entries are based on ranked, tested evidence instead of feel.
+  - Better risk control: exposure is visible at the 3M-spread level; stops and targets are
+    planned from historical behaviour.
+  - Better communication: every trade can be explained to a mentor with data in a few lines.
+  - Learning loop: track records and backtests show which setups actually work, so I keep
+    the ones with an edge and drop the rest.
+
+
+----------------------------------------------------------------------
+9. WHAT'S NEXT
+----------------------------------------------------------------------
+
+  - Fed Funds (ZQ) meeting history alongside the live meeting tab.
+  - Scenario P&L by position and a probability-weighted scenario curve.
+  - Treasury futures (ZT/ZN/ZB) event levels linked to the SOFR year spreads.
+  - A trade journal with statistics by setup.
+
+
+----------------------------------------------------------------------
+10. CLOSING LINE (suggested)
+----------------------------------------------------------------------
+
+"I didn't just trade the curve — I built the instrument panel for it. The dashboard turns
+live data, history and the economic calendar into tested, risk-defined trade ideas, and it
+reflects how I work: understand the market structure, measure everything, and let evidence
+— not feel — decide."
+
+
+----------------------------------------------------------------------
+NOTES FOR THE AGENT WRITING THE POINTS
+----------------------------------------------------------------------
+
+  - Audience: a hiring manager / senior trader. Lead with the problem and impact, then the
+    tabs, then how it's built.
+  - Keep each tab to 2–3 bullets: what it shows, the decision it supports.
+  - Good slide order: Who I am -> Problem -> Solution -> Live tabs -> Analysis tabs ->
+    Trading tabs -> Daily workflow -> What makes it different -> Impact -> Next -> Close.
+  - Screenshots of the Curve, Opportunities (PCA), VIX seasonality and RV Builder tabs make
+    the strongest visuals.

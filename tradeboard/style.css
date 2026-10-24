@@ -1,0 +1,979 @@
+﻿/* Trade board styles: lines 1-977 of Mathur-Git/trade-board assets/style.css (the Trade page and the shell), verbatim.
+   The rest of that file styles other pages of the full STIR board and is not used here. */
+/* Design tokens, ported from the time-and-sales dashboard so the two apps read
+   as one family. Same five-step type scale, same four-step text ramp, same
+   surface palette. Only the components this board actually uses are carried
+   over -- if a control is added here, take its rule from there rather than
+   inventing a second visual language.
+
+   Type scale:
+     --fs-micro  10px  metadata: units, leg lists, counts
+     --fs-ui     12px  controls and secondary numerics -- the default
+     --fs-body   13px  identity: structure names, headings
+     --fs-num    15px  the one number a row exists to report
+     --fs-title  17px  page title only
+
+   Text ramp: --t1 answers the reader's question, --t4 is furniture. Weight is
+   only ever 400 or 600. */
+:root {
+    --fs-micro: 10px;
+    --fs-ui:    12px;
+    --fs-body:  13px;
+    --fs-num:   15px;
+    --fs-title: 17px;
+    --ff: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    --ff-num: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+
+.theme-dark {
+    --t1: rgba(235,235,245,0.92);
+    --t2: rgba(235,235,245,0.65);
+    --t3: rgba(235,235,245,0.42);
+    --t4: rgba(235,235,245,0.26);
+
+    --stroke:        rgba(84,84,88,0.40);
+    --stroke-strong: rgba(84,84,88,0.70);
+    --rule:          rgba(84,84,88,0.35);
+    --fill:          rgba(118,118,128,0.16);
+    --fill-hover:    rgba(118,118,128,0.24);
+
+    --card-bg:  rgba(28,28,30,0.90);
+    --card-brd: rgba(84,84,88,0.25);
+
+    --accent:     #4da3ff;
+    --accent-bg:  rgba(10,132,255,0.12);
+    --accent-brd: rgba(10,132,255,0.38);
+
+    --mark:     #ff453a;
+    --warn:     #ffb340;
+    --warn-bg:  rgba(255,159,10,0.12);
+    --warn-brd: rgba(255,159,10,0.38);
+    --gold:     #ffd60a;
+}
+
+.theme-light {
+    --t1: rgba(0,0,0,0.88);
+    --t2: rgba(60,60,67,0.72);
+    --t3: rgba(60,60,67,0.50);
+    --t4: rgba(60,60,67,0.34);
+
+    --stroke:        rgba(60,60,67,0.28);
+    --stroke-strong: rgba(60,60,67,0.55);
+    --rule:          rgba(60,60,67,0.18);
+    --fill:          rgba(118,118,128,0.10);
+    --fill-hover:    rgba(118,118,128,0.18);
+
+    --card-bg:  rgba(255,255,255,0.96);
+    --card-brd: rgba(60,60,67,0.13);
+
+    --accent:     #007aff;
+    --accent-bg:  rgba(0,122,255,0.09);
+    --accent-brd: rgba(0,122,255,0.32);
+
+    --mark:     #d70015;
+    --warn:     #a05400;
+    --warn-bg:  rgba(180,95,0,0.10);
+    --warn-brd: rgba(180,95,0,0.34);
+    --gold:     #c99700;
+}
+
+* { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; }
+body { margin: 0; font-family: var(--ff); font-variant-numeric: tabular-nums; }
+button, input, select, textarea { font-family: inherit; }
+
+.theme-dark  { background: #000000; min-height: 100vh; transition: background 0.28s ease; }
+.theme-light { background: #f2f2f7; min-height: 100vh; transition: background 0.28s ease; }
+/* Tell the browser which scheme each theme is, so its own controls -- scrollbars above
+   all, but also inputs -- follow it. Without this every scrollbar on the board stayed
+   white in dark mode. The window's own scrollbar belongs to <html>, outside #root, so it
+   is keyed off the theme #root is in. */
+.theme-dark  { color-scheme: dark; }
+.theme-light { color-scheme: light; }
+/* the scrollbar always there (2026-10-16): pages off screen keep the board's width, so a
+   scrollbar coming and going would resize every page's charts on a page switch */
+html { overflow-y: scroll; }
+html:has(#root.theme-dark)  { color-scheme: dark;  background: #000000; }
+html:has(#root.theme-light) { color-scheme: light; background: #f2f2f7; }
+
+/* -- Shell ------------------------------------------------------------ */
+.shell { padding: 14px 16px 24px; }
+
+/* Three columns so the title sits on the page's true centre line -- a flex row with
+   a spacer would centre it on the space LEFT of the theme button instead. */
+.global-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+              margin-bottom: 12px; }
+.global-bar .bar-right { justify-self: end; display: flex; align-items: center; gap: 10px; }
+.title-block { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.page-title { font-size: var(--fs-title); font-weight: 600; letter-spacing: -0.02em;
+              color: var(--t1); }
+.settle { font-size: var(--fs-ui); color: var(--t3); letter-spacing: 0.01em; }
+.settle b { color: var(--t2); font-weight: 400; }
+.spacer { flex: 1; }
+
+/* -- The panel ---------------------------------------------------------
+   Strip and distribution are one unit, not two cards: same surface, one rule
+   between them. The grid stretches, the left pane's chart grows into whatever
+   height the right pane's contents set, so the two always end on the same line. */
+.panel { padding: 12px 18px 14px; }
+
+.panel-head {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding-bottom: 10px; margin-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.panel-grid { display: grid; grid-template-columns: 2fr 1fr; align-items: stretch; }
+
+.pane-left  { display: flex; flex-direction: column; min-width: 0;
+              min-height: 380px; padding-right: 18px; }
+.pane-right { min-width: 0; padding-left: 18px; border-left: 1px solid var(--rule); }
+
+/* A side that ends level with its neighbour (2026-10-12): the side with the set heights sets
+   the panel's, and the chart marked .fill on the other grows into it -- never under its own
+   min-height, which holds when the sides stack. Its figure has no height of its own. A side
+   that is not already a flex column takes .side-fill. */
+.side-fill { display: flex; flex-direction: column; }
+.pane-left > .fill, .side-fill > .fill { flex: 1 1 0; }
+
+@media (max-width: 1100px) {
+    .panel-grid { grid-template-columns: 1fr; }
+    .pane-left  { padding-right: 0; }
+    .pane-right { padding-left: 0; padding-top: 12px; margin-top: 12px;
+                  border-left: none; border-top: 1px solid var(--rule); }
+}
+
+/* -- Cards ------------------------------------------------------------ */
+.chart-card {
+    border-radius: 16px; overflow: hidden; padding: 12px 14px 8px;
+    background: var(--card-bg); border: 1px solid var(--card-brd);
+    transition: background 0.28s ease, border-color 0.28s ease;
+}
+.card-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px;
+             flex-wrap: wrap; }
+.card-title { font-size: var(--fs-body); font-weight: 600; color: var(--t1);
+              letter-spacing: -0.01em; }
+.card-sub   { font-size: var(--fs-micro); color: var(--t3); letter-spacing: 0.04em;
+              text-transform: uppercase; }
+
+/* The Trade ladder sits under a title that changes length as you type -- lots, average
+   and sold all feed it. Sharing a line with the caption, a longer title wrapped the
+   caption and pushed every rung down a row, so the next click on a Held or Sold box
+   landed on the rung above. The head is now a FIXED height: the title gets two lines of
+   its own whatever it says (clamped at two), the caption a line below. */
+#trade-wrap .lad-right .card-head { row-gap: 2px; }
+#trade-wrap .lad-right .card-title {
+    flex-basis: 100%; line-height: 17px; height: 34px; overflow: hidden;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+#trade-wrap .lad-left .card-sub {
+    line-height: 14px; white-space: nowrap; }
+
+/* -- Controls --------------------------------------------------------- */
+.controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+            padding: 0 2px; }
+
+/* One control size across the head row. The source stylesheet runs the segmented
+   control a step larger than the pills (fs-body at 6/20 against fs-ui at 4/12); here
+   the two sit side by side on one rail, where that step reads as a mismatch rather
+   than a hierarchy. */
+.seg-ctrl {
+    display: inline-flex !important; align-items: center;
+    border-radius: 9px; padding: 2px; gap: 2px;
+    background: var(--fill-hover);
+    transition: background 0.28s ease;
+}
+.theme-light .seg-ctrl { background: rgba(118,118,128,0.13); }
+.seg-ctrl label {
+    display: inline-block; padding: 5px 15px; border-radius: 7px;
+    font-weight: 400; font-size: var(--fs-ui); cursor: pointer; user-select: none;
+    white-space: nowrap; color: var(--t3);
+    transition: background 0.18s cubic-bezier(0.25,0.46,0.45,0.94),
+                color       0.18s cubic-bezier(0.25,0.46,0.45,0.94),
+                box-shadow  0.18s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.seg-ctrl input { display: none; }
+.theme-dark  .seg-ctrl label:has(input:checked) {
+    background: rgba(255,255,255,0.10); color: var(--t1); font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 0 0 0.5px rgba(255,255,255,0.06);
+}
+.theme-light .seg-ctrl label:has(input:checked) {
+    background: rgba(255,255,255,0.90); color: var(--t1); font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15), inset 0 0 0 0.5px rgba(0,0,0,0.04);
+}
+.seg-ctrl label:hover:not(:has(input:checked)) { color: var(--t2); }
+
+/* Blue-at-600 means exactly one thing here: this is your current selection. */
+.type-pills { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.type-pills label {
+    display: inline-block; border-radius: 100px; padding: 5px 13px;
+    font-weight: 400; font-size: var(--fs-ui); cursor: pointer; user-select: none;
+    background: transparent; color: var(--t3);
+    border: 1px solid var(--stroke);
+    transition: all 0.12s ease;
+}
+.type-pills input { display: none; }
+.type-pills label:has(input:checked) {
+    background: var(--accent-bg); border-color: var(--accent-brd);
+    color: var(--accent); font-weight: 600;
+}
+.type-pills label:hover:not(:has(input:checked)) {
+    color: var(--t2); border-color: var(--stroke-strong);
+}
+
+.theme-btn {
+    border-radius: 8px; font-size: var(--fs-ui); font-weight: 400;
+    padding: 5px 13px; cursor: pointer; letter-spacing: 0.01em;
+    white-space: nowrap; transition: all 0.15s ease;
+    background: var(--fill); color: var(--t3); border: 1px solid var(--stroke);
+}
+.theme-btn:hover { color: var(--t1); border-color: var(--stroke-strong); }
+
+/* -- Right panel ------------------------------------------------------ */
+/* The ticker IS the name here -- mono, because it is a code, not prose. */
+.struct-id { font-family: var(--ff-num); font-size: var(--fs-body); font-weight: 600;
+             color: var(--t1); letter-spacing: 0.02em; }
+.struct-n { font-size: var(--fs-ui); color: var(--t3);
+            font-variant-numeric: tabular-nums; }
+.weights { font-family: var(--ff-num); color: var(--t2); }
+.legs { font-size: var(--fs-micro); color: var(--t3); letter-spacing: 0.04em;
+        margin: 4px 0 8px; }
+
+/* A 2x2 grid, not a flex row: the second line of the right-hand pair has to sit on
+   the same line as "percentile", and a two-line block baseline-aligned against a 30px
+   number leaves its second line hanging with nothing to align to. */
+.pct-row { display: grid; grid-template-columns: auto auto; justify-content: start;
+           column-gap: 22px; row-gap: 2px; align-items: baseline;
+           padding: 10px 2px 12px; }
+.pct-big { font-size: 30px; font-weight: 600; color: var(--t1); letter-spacing: -0.02em;
+           line-height: 1; }
+.pct-label { font-size: var(--fs-ui); color: var(--t3); }
+.pct-side { font-size: var(--fs-ui); color: var(--t3); font-variant-numeric: tabular-nums; }
+.pct-side.strong { color: var(--t2); }
+
+/* Two metric/value pairs per row: four cells, labels left and values right within
+   each pair, with a gutter before the second pair. */
+.stat-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.stat-table td { padding: 7px 2px; font-size: var(--fs-ui);
+                 border-bottom: 1px solid var(--rule); }
+.stat-table tr:last-child td { border-bottom: none; }
+.stat-table td.lbl { color: var(--t3); }
+.stat-table td.val { text-align: right; color: var(--t2);
+                     font-family: var(--ff-num); }
+.stat-table td.pad { padding-left: 18px; }
+
+.stat-table td.now     { color: var(--t1); font-weight: 600; }
+.stat-table td.val.now { color: var(--mark); }
+
+.note {
+    margin-top: 8px; padding: 7px 10px; border-radius: 10px;
+    font-size: var(--fs-micro); line-height: 1.45;
+    background: var(--warn-bg); border: 1px solid var(--warn-brd); color: var(--warn);
+}
+.foot { font-size: var(--fs-micro); color: var(--t4); padding: 10px 2px 0;
+        letter-spacing: 0.02em; }
+
+/* -- The ladder pages --------------------------------------------------
+   Modelled on the trading front end rather than on the rest of this board: a
+   price spine with bids to its left and asks to its right, because that is the
+   column the size is read from in the platform, and a calculator that puts it
+   somewhere else is a calculator you have to translate before you can trust it.
+
+   The platform's depth columns are ours here -- there is no feed behind these
+   pages. */
+
+/* The two sides stretch to the same height and the right one is a flex column, so the
+   notes can be pinned to its foot with margin-top:auto however tall the ladder is. */
+/* The ladder is capped rather than given a share of the width. Eight narrow columns
+   stretched across half a wide panel put air between every number and the next, which
+   is the opposite of how a ladder is read -- you scan it vertically, so it wants to be
+   narrow. The right side takes whatever is left. */
+.lad-grid { display: grid; grid-template-columns: minmax(0, 458px) 1fr;
+            align-items: stretch; }
+.lad-left  { min-width: 0; padding-right: 18px; }
+.lad-right { min-width: 0; padding-left: 18px; border-left: 1px solid var(--rule);
+             display: flex; flex-direction: column; }
+
+@media (max-width: 1100px) {
+    .lad-grid  { grid-template-columns: 1fr; }
+    .lad-left  { padding-right: 0; }
+    .lad-right { padding-left: 0; padding-top: 12px; margin-top: 12px;
+                 border-left: none; border-top: 1px solid var(--rule); }
+}
+
+.lad-book { max-height: 560px; overflow-y: auto; margin-top: 6px;
+            border: 1px solid var(--rule); border-radius: 10px; }
+.lad-table { width: 100%; border-collapse: collapse; font-family: var(--ff-num);
+             font-size: var(--fs-ui); table-layout: fixed; }
+
+.lad-table th {
+    position: sticky; top: 0; z-index: 2;
+    font-family: var(--ff); font-size: var(--fs-micro); font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--t4);
+    text-align: center; padding: 6px 2px;
+    background: var(--card-bg); border-bottom: 1px solid var(--rule);
+}
+.lad-table td { padding: 0 2px; height: 22px; color: var(--t3);
+                text-align: center; }
+
+.lad-row { border-bottom: 1px solid var(--rule); }
+.lad-row:last-child { border-bottom: none; }
+.lad-work .lad-px-c { cursor: pointer; }
+.lad-work:hover { background: var(--fill); }
+
+/* The spine. Centred, boxed on both sides, and never dimmed -- on a real ladder
+   the price column is the one thing that is always legible. */
+.lad-px-c { text-align: center; background: var(--fill);
+            border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
+            width: 17%; }
+.lad-px { color: var(--t1); font-weight: 600; }
+.lad-tag { font-family: var(--ff); font-size: 9px; letter-spacing: 0.08em;
+           color: var(--t4); margin-left: 6px; vertical-align: 1px; }
+
+.lad-bid-c, .lad-ask-c { width: 11%; padding: 0; }
+
+.lad-barwrap { position: relative; display: flex; align-items: center; height: 22px; }
+.lad-bid-c .lad-barwrap { justify-content: flex-end; }
+.lad-ask-c .lad-barwrap { justify-content: flex-start; }
+.lad-bar { position: absolute; top: 3px; bottom: 3px; border-radius: 2px; }
+.lad-bid-c .lad-bar { right: 0; }
+.lad-ask-c .lad-bar { left: 0; }
+.lad-q { position: relative; padding: 0 6px; font-size: var(--fs-micro);
+         color: var(--t2); }
+
+.theme-dark  .lad-bar.bid { background: rgba(10,132,255,0.38); }
+.theme-light .lad-bar.bid { background: rgba(0,122,255,0.26); }
+.theme-dark  .lad-bar.ask { background: rgba(255,69,58,0.36); }
+.theme-light .lad-bar.ask { background: rgba(215,0,21,0.22); }
+
+/* Entry, target and stop are rules across the ladder, not badges on it: the eye
+   picks up a horizontal line at a glance and has to hunt for a chip. */
+.lad-entry .lad-tag { color: var(--accent); }
+.lad-tgt   { background: rgba(48,209,88,0.10); }
+.lad-tgt   .lad-tag { color: #30d158; }
+.theme-light .lad-tgt .lad-tag { color: #1a7f37; }
+.lad-stop  { background: rgba(255,69,58,0.10); }
+.lad-stop  .lad-tag { color: var(--mark); }
+
+/* A pulled rung is marked three times over, because the one thing you must not do is
+   mistake it for a level that simply got no size: struck price, "skip" in the size
+   column where you look for size, and a muted edge where the live rungs carry a blue
+   one. */
+.lad-skip .lad-px { color: var(--t4); text-decoration: line-through; }
+
+/* -- Ladder inputs ---------------------------------------------------- */
+.lad-lbl { font-size: var(--fs-micro); color: var(--t3); letter-spacing: 0.04em;
+           text-transform: uppercase; white-space: nowrap; }
+.lad-input {
+    width: 92px; padding: 5px 8px; border-radius: 8px; text-align: right;
+    font-family: var(--ff-num); font-size: var(--fs-ui); color: var(--t1);
+    background: var(--fill); border: 1px solid var(--stroke);
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+.lad-input:focus { outline: none; border-color: var(--accent-brd);
+                   background: var(--accent-bg); }
+
+/* The same wrapper/inner pair, for the panel inputs. */
+.lad-input input {
+    width: 100%; border: none; background: transparent; text-align: right;
+    font-family: var(--ff-num); font-size: var(--fs-ui); color: var(--t1);
+    padding: 0; outline: none;
+}
+/* A stand-in stop or target shows here as a placeholder: the same number in the same
+   place, dimmed, so it reads as what the ladder is using rather than what you chose. */
+.lad-input input::placeholder { color: var(--t3); font-family: var(--ff-num);
+                                opacity: 1; }
+
+/* -- Fill-depth table -------------------------------------------------- */
+.lad-depth-head { padding: 2px 2px 6px; }
+.lad-depth { width: 100%; border-collapse: collapse; table-layout: fixed;
+             font-family: var(--ff-num); }
+.lad-depth th {
+    font-family: var(--ff); font-size: var(--fs-micro); font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--t4);
+    text-align: right; padding: 0 3px 5px; border-bottom: 1px solid var(--rule);
+}
+.lad-depth th:first-child { text-align: left; }
+.lad-depth td { padding: 6px 3px; font-size: var(--fs-ui);
+                border-bottom: 1px solid var(--rule); text-align: right; }
+.lad-depth tr:last-child td { border-bottom: none; }
+.lad-depth td.lbl { text-align: left; color: var(--t3); font-family: var(--ff-num); }
+.lad-depth td.val { color: var(--t2); }
+.lad-depth td.neg { color: var(--mark); }
+.theme-dark  .lad-depth td.pos { color: #30d158; }
+.theme-light .lad-depth td.pos { color: #1a7f37; }
+.lad-depth td.rr  { color: var(--t1); font-weight: 600; }
+.lad-depth .lad-full td { background: var(--fill); }
+
+/* A position already on: marked on the ladder where it sits, and given its own row
+   at the top of the fill-depth table -- where you stand before the ladder acts. */
+.lad-depth .lad-held-row td { color: var(--warn); }
+.lad-depth .lad-held-row td.lbl { color: var(--warn); }
+.lad-depth .lad-held-row { border-bottom: 1px solid var(--warn-brd); }
+
+/* Two click targets per rung: the price spine moves the entry, the size column
+   works or pulls that level. Both say so on hover; neither shouts at rest. */
+.lad-table td.clickable { cursor: pointer; }
+.lad-px-c.clickable:hover { background: var(--fill-hover); }
+
+/* Markers get their own gutter. Beside the price they turned a column of numbers
+   into a column of numbers-and-words, which is exactly what a ladder must not be. */
+.lad-mark-c { width: 13%; font-family: var(--ff); font-size: 9px;
+              letter-spacing: 0.06em; color: var(--t4);
+              white-space: nowrap; overflow: visible; }
+.lad-entry .lad-mark-c { color: var(--accent); }
+.lad-tgt   .lad-mark-c { color: #30d158; }
+.theme-light .lad-tgt .lad-mark-c { color: #1a7f37; }
+.lad-stop  .lad-mark-c { color: var(--mark); }
+.lad-avg   .lad-mark-c { color: var(--mark); font-weight: 600; }
+
+/* Breakeven is a rule, not a badge -- a level you look for is found at a glance as a
+   line and has to be read as a chip. It runs the full width of the price column at the
+   exact height of the average, OVER the digits: a line that breaks around a number is
+   a line you have to reassemble by eye. */
+.lad-px-c { position: relative; }
+.lad-avgline {
+    position: absolute; left: 0; right: 0; height: 2px; margin-top: -1px;
+    background: var(--mark); z-index: 3; pointer-events: none;
+}
+
+/* Held is typed per rung. The box is invisible until it holds something or you are
+   in it -- seventeen outlined boxes would read as a form, not a ladder. */
+/* Dash wraps dcc.Input in a container div and puts className on the WRAPPER, so
+   every rule here has to name the inner <input> too or it styles a box around
+   nothing. Same reason .lad-input carries a matching pair below. */
+.lad-held-c { width: 12%; padding: 0 2px; }
+/* Dash's own container carries a white box, a border and a 34px height. It has to be
+   flattened before the inner input can be styled, and !important is the honest tool
+   for overriding a third-party rule we do not control the load order of. */
+.lad-held-in {
+    display: block; width: 100%;
+    background: transparent !important; border: none !important;
+    border-radius: 0 !important; height: auto !important; padding: 0 !important;
+    box-shadow: none !important;
+}
+.lad-held-in input {
+    width: 100%; height: 19px; padding: 0 5px; text-align: center;
+    font-family: var(--ff-num); font-size: var(--fs-ui); color: var(--warn);
+    background: transparent; border: 1px solid transparent; border-radius: 5px;
+    border-bottom-color: var(--stroke);          /* faint rule: type here */
+}
+.lad-held-in input:hover { border-color: var(--stroke); }
+.lad-held-in input:focus { outline: none; border-color: var(--warn-brd);
+                           background: var(--warn-bg); }
+.lad-held-in input::-webkit-outer-spin-button,
+.lad-held-in input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* The entry is typed into the ladder's own price column, in the header row directly
+   above the spine -- the one place on the page where that number belongs. The header
+   is static, so typing here never rebuilds the box being typed into. */
+.lad-px-head { padding: 3px 4px !important; }
+/* Flatten Dash's own container first -- see the note on .lad-held-in. */
+.lad-entry-in {
+    display: block; width: 100%;
+    background: transparent !important; border: none !important;
+    border-radius: 0 !important; height: auto !important; padding: 0 !important;
+    box-shadow: none !important;
+}
+.lad-entry-in input {
+    width: 100%; height: 22px; padding: 0 6px; text-align: center;
+    font-family: var(--ff-num); font-size: var(--fs-body); font-weight: 600;
+    color: var(--t1); background: var(--fill); border: 1px solid var(--stroke);
+    border-radius: 6px; outline: none;
+}
+.lad-entry-in input::placeholder { font-weight: 400; font-size: var(--fs-micro);
+                                   letter-spacing: 0.06em; text-transform: uppercase;
+                                   color: var(--t4); }
+.lad-entry-in input:hover { border-color: var(--stroke-strong); }
+.lad-entry-in input:focus { border-color: var(--accent-brd);
+                            background: var(--accent-bg); }
+.lad-entry-in input::-webkit-outer-spin-button,
+.lad-entry-in input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* The market line: the full width of the ladder, above the entry when buying and
+   below it when selling, with the same number of rungs either side of it. It reads
+   as black on the light theme and as its opposite on the dark one -- a line drawn in
+   literal black on a black board is a line nobody sees. */
+.lad-mkt-above td { border-top: 2px solid var(--t1); }
+.lad-mkt-below td { border-bottom: 2px solid var(--t1); }
+
+/* All clear is the one destructive control on the page, so it says so quietly. */
+.theme-btn.danger { color: var(--mark); border-color: var(--mark); opacity: 0.75; }
+.theme-btn.danger:hover { opacity: 1; color: var(--mark); border-color: var(--mark); }
+
+/* The clear buttons travel as a block: right-aligned on one line when they fit, and
+   wrapping together when they do not, instead of one of them stranding itself. */
+.lad-btns { display: flex; gap: 6px; margin-left: auto; flex-wrap: nowrap; }
+/* Two lines (desk, 2026-10-08): instrument, side and rungs, with Save version
+   right-aligned over All clear; then peak in, peak out and the clear buttons. The
+   break starts the second line at any width. */
+#trade-wrap .tr-save { margin-left: auto; }
+#trade-wrap .head-break { flex-basis: 100%; height: 0; }
+.lad-btns .theme-btn { padding: 5px 10px; }
+
+/* Buy is blue and sell is red, filled, because the side changes what every other
+   number on the page means -- it is not a preference, it is the sign. */
+#tr-side label:nth-of-type(1):has(input:checked) {
+    background: var(--accent); color: #fff; font-weight: 600; box-shadow: none;
+}
+#tr-side label:nth-of-type(2):has(input:checked) {
+    background: var(--mark); color: #fff; font-weight: 600; box-shadow: none;
+}
+
+/* Dash gives every inline radio option its own margin-right, including the LAST one,
+   which leaves a strip of dead space inside the control after the final pill. Both
+   controls space themselves with `gap`, so the margin is pure surplus -- killed here
+   once rather than patched per control, because it shows up everywhere they are used. */
+.seg-ctrl label, .type-pills label { margin: 0 !important; }
+
+/* The page switcher sits in a grid cell, and a grid item stretches to fill its column
+   by default -- which blew the control out to the full width of the left third of the
+   bar however few pages it held. `inline-flex` cannot save it: grid blockifies its
+   items. It has to be told to hug its content. */
+#page { justify-self: start; }
+
+/* -- Draggable stop and target flags ---------------------------------- */
+/* They read as things you can pick up: a chip with an outline, in the colour the row
+   already uses, rather than the bare word the other markers are. */
+.lad-tag + .lad-tag { margin-left: 5px; }
+.lad-flag {
+    cursor: grab; padding: 1px 5px; border-radius: 4px;
+    border: 1px solid currentColor; background: var(--card-bg);
+    position: relative; z-index: 2;
+}
+.lad-flag:hover { filter: brightness(1.25); }
+.lad-flag.dragging {
+    cursor: grabbing; z-index: 6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+}
+/* While a drag is live the whole page stops selecting text under the cursor. */
+body.lad-dragging { user-select: none; cursor: grabbing; }
+
+/* The rung you would drop on, previewed before you let go. */
+.lad-drop .lad-px-c { box-shadow: inset 0 0 0 1px var(--accent); }
+
+/* -- The way out ------------------------------------------------------ */
+/* The mark carries the line and a tint and no chip: the line IS the marker here. */
+.ex-mkt { background: var(--fill); }
+
+/* The reversal table's "now" row once the trade can no longer lose. */
+.lad-depth .ex-free-row td.lbl { color: var(--t1); }
+
+/* Sold: typed like Held, in the target's green so what has gone out reads apart from
+   what came in. */
+.ex-sold-c .lad-held-in input { color: #30d158; }
+.theme-light .ex-sold-c .lad-held-in input { color: #1a7f37; }
+.ex-sold-c .lad-held-in input:focus { border-color: #30d158; }
+/* Rungs behind the furthest sale: the market has been through them, so they carry no
+   size and no click, and the price dims to say so. */
+.ex-passed .lad-px { color: var(--t4); }
+
+/* -- The Trade page: both halves on one ladder -------------------------- */
+/* A wide ladder, and `In` and `Out` are two size
+   columns rather than one, because a rung is either a level you add at or one you sell
+   at and never both -- collapsing them into a single column would make the reader work
+   out which by looking at where the row sits. */
+/* Both columns are capped and the card is capped to match, so the panel ends where the
+   content ends. Left as 1fr the right column took the whole monitor -- 977px on a 1600px
+   screen -- and stretched a seven-column table of short numbers across 959px of it, which
+   puts a hand's width between a label and its figure. */
+/* Twelve columns now `Sold` sits outside `Out`, so the ladder side is wider again. */
+/* Trimmed to what each column holds (desk, 2026-09-25): every column a fixed width in
+   pixels, sized to its widest content -- a chip, a four-digit size, a five-digit dollar
+   figure, its header -- with a little air, and no more. 576px of columns, 596px with the
+   book's border and the gap to the right side; the panel shrinks by the 124px saved.
+   Risk $ and Banked $ then went (desk, 2026-09-25): 460px of columns, 480px in all, and
+   the panel 116px narrower again. HELD RISK and IN RISK then came in on the far right
+   (desk, 2026-09-25), 60px each: 580px of columns, 600px in all, the panel 120px wider,
+   and no other column narrowed to make room. Held became Filled the same day; FILLED
+   RISK needs 70px, so 590px of columns, 610px in all. OUT P&L then came in after IN
+   RISK (desk, 2026-09-25), 60px: 650px of columns, 670px in all. The peak's dot column
+   (desk, 2026-09-27), 20px: 670px of columns, 690px in all. The way out's dot column
+   (desk, 2026-09-29), 20px, and OUT P&L became OUT REGRET, 16px wider for its head:
+   706px of columns, 726px in all, the panel 36px wider. */
+#trade-wrap .lad-grid { grid-template-columns: minmax(0, 726px) minmax(0, 540px); }
+#trade-wrap .tr-main { max-width: 1326px; }
+#trade-wrap .lad-book { max-height: 700px; }
+#trade-wrap .lad-held-in input { min-width: 0; padding: 0 2px; }
+#trade-wrap .lad-mark-c.mk-in  { width: 54px; }   /* STOP, ENTRY */
+#trade-wrap .lad-mark-c.mk-out { width: 38px; }   /* 1ST, TGT */
+#trade-wrap .lad-held-c { width: 44px; }
+#trade-wrap .lad-bid-c, #trade-wrap .lad-ask-c { width: 32px; }
+#trade-wrap .lad-px-c   { width: 60px; }
+.tr-in-c  { width: 38px; color: var(--t2); }
+.tr-out-c { width: 38px; color: var(--t2); }
+/* IN and OUT head their size and its bar together, centred over the pair. */
+#trade-wrap .lad-head th.tr-span { width: 70px; text-align: center; }
+/* Two position columns, because the halves can share a rung: `Pos` is what has
+   accumulated on the way in, `Left` what remains after selling on the way out. */
+.tr-pos-c  { width: 40px; color: var(--t3); font-variant-numeric: tabular-nums; }
+.tr-left-c { width: 40px; color: var(--t3); font-variant-numeric: tabular-nums; }
+/* The peak's gold dot, at the far right in a ruled column of its own, set off from the
+   figures the way the fill-depth table's dot column is: a rule down its left edge the
+   whole height, header to foot. Clickable on the rungs you add at while the peak is on;
+   an empty cell shows the dot faintly under the mouse. Dimmed, not gone, while off. */
+#trade-wrap .tr-peak-c { width: 20px; padding: 0 !important; color: var(--gold);
+                         font-size: 11px; text-align: center;
+                         border-left: 1px solid var(--stroke); }
+/* .lad-book in the selector, or the bold heads' colour further down wins the tie. */
+#trade-wrap .lad-book .lad-head th.tr-peak-c { color: var(--gold); font-weight: 400; }
+#trade-wrap .tr-peak-c.is-off { opacity: 0.35; }
+#trade-wrap td.tr-peak-c.clickable:hover { background: var(--fill); }
+#trade-wrap td.tr-peak-c.clickable:empty:hover::after { content: "●"; opacity: 0.35; }
+/* The way out's dot (desk, 2026-09-29): the same column in blue, on the rungs you sell
+   at. Gold is the way in's, so the colour says which half a dot shapes. */
+#trade-wrap .tr-peak-out-c,
+#trade-wrap .lad-book .lad-head th.tr-peak-out-c { color: var(--accent); }
+/* Each rung's own dollars to the stop, held lots and lots still to work apart, and what
+   each out rung gives up to the target (OUT REGRET, was OUT P&L). Plain figures, no bars (desk, 2026-09-25). The foot rows under them: what the rungs drawn do
+   not show, sales, and the totals -- together the full-fill LOSS. */
+.tr-risk-c { width: 60px; color: var(--t2); font-variant-numeric: tabular-nums;
+             text-align: right !important; padding-right: 6px !important; }
+#trade-wrap .lad-head th.tr-risk-f { width: 70px; }   /* FILLED RISK, the longer head */
+#trade-wrap .lad-head th.tr-risk-o { width: 76px; }   /* OUT REGRET, the longest head */
+#trade-wrap .lad-head th.tr-risk-c { text-align: right; white-space: nowrap;
+                                     padding-left: 0; padding-right: 4px !important; }
+#trade-wrap .tr-risk-foot td { height: 22px; border-top: 1px solid var(--rule); }
+#trade-wrap .tr-risk-foot td.tr-risk-lbl {
+    text-align: right; padding-right: 8px; font-family: var(--ff);
+    font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--t3); }
+#trade-wrap .tr-risk-total td { color: var(--t1); font-weight: 600; }
+
+/* Going in and coming out are marked at rest on the side they happen, so the half of
+   the ladder you are reading is obvious without checking the price against the entry:
+   blue down the IN cells of rungs worked going in, green down the OUT cells of rungs
+   worked coming out -- each on its own cells, so the two overlap only where the halves
+   do. */
+#trade-wrap .tr-in-c.tr-work  { box-shadow: inset 2px 0 0 var(--accent-brd); }
+#trade-wrap .tr-out-c.tr-work { box-shadow: inset -2px 0 0 #30d158; }
+.theme-light #trade-wrap .tr-out-c.tr-work { box-shadow: inset -2px 0 0 #1a7f37; }
+#trade-wrap .lad-live .tr-in-c,
+#trade-wrap .lad-live .tr-out-c { color: var(--t1); font-weight: 600; }
+#trade-wrap .lad-skip .tr-in-c, #trade-wrap .lad-skip .tr-out-c {
+    color: var(--t3); font-style: italic; font-size: var(--fs-micro);
+    letter-spacing: 0.06em; }
+#trade-wrap .tr-in-c.clickable:hover, #trade-wrap .tr-out-c.clickable:hover {
+    background: var(--fill-hover); color: var(--t1); }
+
+/* The wide ladder opts back in to the stacking breakpoint. `#id .class` outranks the
+   plain `.lad-grid` rule inside the media query -- media queries add no specificity -- so
+   without this the narrow layout silently stopped applying to the page that needs it
+   most. Same specificity as the rules above, later in the file, so it wins. */
+@media (max-width: 1100px) {
+    #trade-wrap .lad-grid { grid-template-columns: 1fr; }
+    #trade-wrap .panel { max-width: none; }
+}
+
+/* The fill depth the way out is sized for. Every row is a choice, so the chosen one
+   has to be findable at a glance rather than inferred from the tables below it. */
+.lad-depth tr.clickable { cursor: pointer; }
+.lad-depth tr.clickable:hover td { background: var(--fill-hover); }
+.lad-depth tr.tr-picked td { background: var(--fill); color: var(--t1); }
+
+/* The first exit -- the rung the ladder starts selling at. A flag, so it drags. */
+.ex-first .lad-mark-c { color: var(--accent); }
+
+/* A small caps label in front of a row of pills. Born on SR3 Historicals (retired
+   2026-10-06); Meeting Structures and COD use it. */
+.hist-lbl { font-size: var(--fs-micro); color: var(--t4); letter-spacing: 0.06em;
+            text-transform: uppercase; white-space: nowrap; }
+
+/* -- Trade: two marker columns ------------------------------------------- */
+/* IN markers (ENTRY, STOP) and OUT markers (1ST, TGT) in columns of their own. In one
+   shared gutter ENTRY and 1ST sat side by side on the same rung and read as one thing.
+   Colour follows the marker, not the row: the row colour painted 1ST blue whenever it
+   shared a rung with the entry. In is blue and red, out is green. */
+#trade-wrap .mk-out { border-right: 1px solid var(--rule); }
+#trade-wrap .lad-tag { margin-left: 0; }
+#trade-wrap .lad-tag + .lad-tag { margin-left: 4px; }
+#trade-wrap .lad-tag[data-kind="entry"] { color: var(--accent); }
+#trade-wrap .lad-tag[data-kind="stop"] { color: var(--mark); }
+#trade-wrap .lad-tag[data-kind="first"],
+#trade-wrap .lad-tag[data-kind="target"] { color: #30d158; }
+.theme-light #trade-wrap .lad-tag[data-kind="first"],
+.theme-light #trade-wrap .lad-tag[data-kind="target"] { color: #1a7f37; }
+
+/* The average out, drawn like the average in: a rule at its true height, in green. */
+.lad-avgline.out { background: #30d158; }
+.theme-light .lad-avgline.out { background: #1a7f37; }
+
+/* -- Trade: the cut past the stop (desk, 2026-09-30) ----------------------- */
+/* OUT BY, the level you are fully out by, in the stop's red and tint, under the stop in
+   the IN marker column. The cut's lots sit in OUT -- cutting a long is selling it -- with
+   a red rule down the cell's outer edge where the way out has its green one. */
+#trade-wrap .lad-tag[data-kind="outby"] { color: var(--mark); }
+.lad-outby { background: rgba(255,69,58,0.10); }
+.lad-outby .lad-mark-c { color: var(--mark); }
+#trade-wrap .tr-out-c.tr-cut { box-shadow: inset -2px 0 0 var(--mark); }
+
+/* -- Trade: EXIT Off (desk, 2026-10-09) ----------------------------------- */
+/* Hides the way out, and the cut with it, for showing the page to someone. A view only:
+   nothing is resized. Gone from the ladder: OUT and its bar, SOLD, LEFT, OUT REGRET and
+   the blue dot column (the renderer leaves them empty and shortens the foot's label
+   span to match). Gone from the head: peak out and Clear sold. On the right: the
+   way-out table, and the first exit's box and the average out, kept as blank cells so
+   the levels table keeps its rows. TGT stays -- P&L is valued to it. */
+#trade-wrap .tr-exit-off .lad-table .lad-ask-c,
+#trade-wrap .tr-exit-off .lad-table .tr-out-c,
+#trade-wrap .tr-exit-off .lad-table .ex-sold-c,
+#trade-wrap .tr-exit-off .lad-table .tr-left-c,
+#trade-wrap .tr-exit-off .lad-table .tr-risk-o,
+#trade-wrap .tr-exit-off .lad-table .tr-peak-out-c,
+#trade-wrap .tr-exit-off .tr-peak-out-ctl,
+#trade-wrap .tr-exit-off #tr-clear-sold,
+#trade-wrap .tr-exit-off #tr-exit-head,
+#trade-wrap .tr-exit-off #tr-exit { display: none; }
+#trade-wrap .tr-exit-off #tr-first,
+#trade-wrap .tr-exit-off #tr-first-use,
+#trade-wrap .tr-exit-off #tr-avg-out { visibility: hidden; }
+/* The ladder is 250px narrower without those columns (32 + 38 + 44 + 40 + 76 + 20), so
+   its side of the grid and the panel shrink by that much -- above the stacking width
+   only, or this rule would outrank the media query's single column. */
+@media (min-width: 1101px) {
+    #trade-wrap .tr-exit-off .lad-grid {
+        grid-template-columns: minmax(0, 476px) minmax(0, 540px); }
+    #trade-wrap .tr-main.tr-exit-off { max-width: 1076px; }
+}
+
+/* -- Trade: the levels as a table ---------------------------------------- */
+/* IN beside OUT, so each level sits next to its partner and the two averages they
+   produce sit underneath -- the same ruled style as the tables below it. */
+.lvl-table { width: 100%; border-collapse: collapse; table-layout: fixed;
+             margin: 0 0 14px; font-family: var(--ff-num); }
+.lvl-table th {
+    font-family: var(--ff); font-size: var(--fs-micro); font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--t4);
+    text-align: right; padding: 0 3px 5px; border-bottom: 1px solid var(--rule); }
+.lvl-table th:first-child { text-align: left; width: 30%; }
+.lvl-table td { padding: 5px 3px 3px; border-bottom: 1px solid var(--rule);
+                text-align: right; vertical-align: top; }
+.lvl-table tr:last-child td { border-bottom: none; }
+.lvl-table td.lbl { text-align: left; vertical-align: middle; font-family: var(--ff);
+                    font-size: var(--fs-micro); color: var(--t3);
+                    text-transform: uppercase; letter-spacing: 0.04em; }
+.lvl-table .lad-input { width: 100%; max-width: 110px; margin-left: auto;
+                        box-sizing: border-box; display: block; }
+/* The value the ladder is using when it is not yours. Always one line tall, so the
+   table does not move as a stand-in appears or goes. */
+.lvl-use { font-size: var(--fs-micro); color: var(--t4); height: 12px;
+           line-height: 12px; margin-top: 2px; white-space: nowrap; }
+.lvl-avg { vertical-align: middle !important; font-size: var(--fs-ui); font-weight: 600;
+           padding-right: 11px !important; }
+.lvl-avg.in  { color: var(--mark); }
+.lvl-avg.out { color: #30d158; }
+.theme-light .lvl-avg.out { color: #1a7f37; }
+.lvl-table tr.lvl-sect th { text-align: left; padding-top: 12px; }
+
+/* -- Trade: the right side as a spreadsheet ----------------------------- */
+/* Every block on the right is a ruled grid: a cell border on every cell, a shaded header
+   row, a shaded label column like a row header, figures right-aligned in the number
+   font, and the typed levels sitting flush in their cells rather than floating as
+   rounded boxes. One look for all four tables, so the side reads as one sheet. */
+#trade-wrap .lad-right .lvl-table,
+#trade-wrap .lad-right .lad-depth {
+    border-collapse: collapse; border: 1px solid var(--stroke); margin: 0 0 12px; }
+#trade-wrap .lad-right .lvl-table th, #trade-wrap .lad-right .lvl-table td,
+#trade-wrap .lad-right .lad-depth th, #trade-wrap .lad-right .lad-depth td {
+    border: 1px solid var(--rule); padding: 3px 6px; height: 22px; }
+#trade-wrap .lad-right .lvl-table th, #trade-wrap .lad-right .lad-depth th {
+    background: var(--fill); color: var(--t2); font-weight: 600; text-align: right;
+    letter-spacing: 0.04em; padding: 4px 6px; }
+#trade-wrap .lad-right .lvl-table th:first-child,
+#trade-wrap .lad-right .lad-depth th:first-child { text-align: left; }
+#trade-wrap .lad-right td.lbl { background: var(--fill); color: var(--t2); }
+#trade-wrap .lad-right .lad-depth tr:last-child td { border-bottom: 1px solid var(--rule); }
+#trade-wrap .lad-right .lad-depth td { padding: 3px 6px; }
+
+/* Typed cells: the cell is the input. */
+#trade-wrap .lvl-table td.lvl-cell { padding: 0; vertical-align: middle; }
+#trade-wrap .lvl-table .lad-input {
+    max-width: none; width: 100%; border: none; border-radius: 0; background: transparent;
+    padding: 4px 6px; }
+#trade-wrap .lvl-table .lad-input input { font-weight: 600; }
+/* The cell you are typing in is shaded, not boxed -- the way a spreadsheet marks the
+   active cell. No outline of ours, and Dash's own focus border and focus-visible outline
+   on its input wrapper are switched off: together they drew a blue box with a purple
+   line inside it. */
+#trade-wrap .lvl-table .lad-input,
+#trade-wrap .lvl-table .lad-input:focus-within,
+#trade-wrap .lvl-table .lad-input:has(:focus-visible) {
+    outline: none !important; border: none !important; box-shadow: none !important; }
+#trade-wrap .lvl-table td.lvl-cell:focus-within { background: var(--accent-bg); }
+/* Every row of the levels table is one height -- start, end, average, max loss -- and a
+   note ("min 21", "using 21.5") sits INSIDE its cell, small and grey on the
+   left, with the number on the right, instead of on a line of its own under the box that
+   made those rows taller (desk, 2026-09-25). A long note wraps to two small lines rather
+   than run under the number; clicks go through it to the box. */
+#trade-wrap .lad-right .lvl-table td { height: 28px; }
+#trade-wrap .lvl-table .lad-input { padding: 0 6px; height: 27px; min-height: 0; }
+#trade-wrap .lvl-table .lad-input input { height: 27px; }
+#trade-wrap .lvl-table td.lvl-cell { position: relative; }
+#trade-wrap .lvl-table .lvl-use {
+    position: absolute; left: 6px; top: 50%; transform: translateY(-50%);
+    max-width: calc(100% - 64px); margin: 0; padding: 0; height: auto;
+    line-height: 11px; white-space: normal; text-align: left; pointer-events: none;
+    color: var(--t3); }
+#trade-wrap .lvl-table .lad-input input::placeholder { font-weight: 400; }
+/* Max loss: ▼ ▲ on the left of its cell, where the other cells keep their notes; the
+   amount stays on the right, typed or stepped. */
+#trade-wrap .lvl-table .loss-step { position: absolute; left: 6px; top: 50%;
+    transform: translateY(-50%); display: flex; gap: 4px; z-index: 1; }
+#trade-wrap .lvl-table .loss-cell .lad-input input { padding-left: 56px; }
+#trade-wrap .lvl-avg { padding-right: 6px !important; }
+
+/* Table titles read as sheet captions, not as floating uppercase whispers. */
+#trade-wrap .lad-right .lad-depth-head { padding: 0 0 4px; color: var(--t2); }
+
+/* Trade: every "skip" looks the same -- grey italic -- whatever the other half of the rung
+   is doing. It is styled on the cell, and outranks the live row's bold size style. */
+#trade-wrap .lad-row .tr-in-c.is-skip, #trade-wrap .lad-row .tr-out-c.is-skip {
+    color: var(--t3); font-weight: 400; font-style: italic;
+    font-size: var(--fs-micro); letter-spacing: 0.06em; }
+#trade-wrap .lad-row .tr-in-c.is-skip.clickable:hover,
+#trade-wrap .lad-row .tr-out-c.is-skip.clickable:hover { color: var(--t1); }
+
+/* Trade: the how-to caption sits under the ladder. */
+#trade-wrap .tr-caption { margin-top: 6px; text-align: right; }
+
+/* Trade: the rungs counter beside Long / Short. A number between two arrow buttons --
+   not a field -- and the ladder is never capped short, so every rung drawn is on screen
+   without a scroll whatever the count. */
+.rungs-ctl { display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; }
+.rungs-ctl .lad-lbl { margin-right: 2px; }
+.rungs-btn { padding: 2px 7px !important; font-size: 9px; line-height: 1; }
+.rungs-btn:disabled { opacity: 0.35; cursor: default; }
+.rungs-val { min-width: 20px; text-align: center; font-family: var(--ff-num);
+             font-size: var(--fs-ui); font-weight: 600; color: var(--t1); }
+#trade-wrap .lad-book { max-height: none; }
+
+/* Trade: the ladder starts at the top of the left side, level with the title on the right. */
+#trade-wrap .lad-book { margin-top: 0; }
+
+/* Trade, desk 2026-09-25: square corners on the ladder and on the bid/ask box, and the
+   ladder's column headings bold in the main text colour so they stand off the rows. */
+#trade-wrap .lad-book { border-radius: 0; }
+#trade-wrap .lad-entry-in input { border-radius: 0; }
+#trade-wrap .lad-book .lad-head th { font-weight: 700; color: var(--t1); }
+
+/* -- Trade: which lots the exit is sized for ------------------------------ */
+/* In rungs deeper than the picked depth are not in the position the way out is sized
+   for: their size, bar, Pos and Risk fade. The picked row in the fill-depth table gets a
+   fill, bold figures and a gold dot, and the rows beyond it fade to match. */
+#trade-wrap .lad-row .tr-unc { color: var(--t4) !important; font-weight: 400 !important; }
+#trade-wrap .lad-barwrap.tr-unc { opacity: 0.3; }
+#trade-wrap .lad-depth tr.tr-picked td { background: var(--accent-bg); color: var(--t1);
+                                         font-weight: 600; }
+/* ...but a loss stays red and a P&L green on the picked row: bold, not recoloured
+   (desk, 2026-09-25). */
+#trade-wrap .lad-depth tr.tr-picked td.neg { color: var(--mark); }
+.theme-dark  #trade-wrap .lad-depth tr.tr-picked td.pos { color: #30d158; }
+.theme-light #trade-wrap .lad-depth tr.tr-picked td.pos { color: #1a7f37; }
+#trade-wrap .lad-depth tr.tr-uncounted td { color: var(--t4); }
+/* The picked row's marker: a gold dot in a narrow column of its own, left of `filled`
+   (it replaced a thin accent bar on the row's edge). Empty on every other row. */
+#trade-wrap .lad-right .lad-depth th.dot, #trade-wrap .lad-right .lad-depth td.dot {
+    width: 22px; padding: 3px 0; text-align: center; }
+#trade-wrap .lad-right .lad-depth th.dot + th { text-align: left; }
+/* `filled` holds "12 @ -10.0" or "held @ -10.125" on one line (desk, 2026-09-25): its
+   own width, and never wrapped -- negative prices broke it over two lines. */
+#trade-wrap .lad-right #tr-depth th.dot + th { width: 112px; }
+#trade-wrap .lad-right #tr-depth td.lbl { white-space: nowrap; }
+/* The way-out table on the fill-depth table's grid (desk, 2026-10-18: "a bit wonky"): its
+   first column the width of dot + depth, every column after it under its partner above,
+   and the sixth -- P&L above, IF STOPPED / IF CUT here -- wide enough for IF STOPPED on one
+   line. Until then its seven columns were equal and lined up with nothing. */
+#trade-wrap .lad-right #tr-exit th:first-child { width: 134px; }
+#trade-wrap .lad-right #tr-depth th:nth-child(7),
+#trade-wrap .lad-right #tr-exit th:nth-child(6) { width: 80px; }
+#trade-wrap .lad-right #tr-exit th { white-space: nowrap; }
+#trade-wrap .lad-depth td.dot { color: var(--gold) !important; font-size: 11px;
+                                line-height: 1; }
+#trade-wrap .lad-depth tr.tr-uncounted td.neg,
+#trade-wrap .lad-depth tr.tr-uncounted td.pos,
+#trade-wrap .lad-depth tr.tr-uncounted td.rr { color: var(--t4); font-weight: 400; }
+
+
+
+
+/* -- Trade: the plans panel ---------------------------------------------- */
+/* Two cards in a row: the Trade panel, and saved plans in a panel of their own on the
+   right (desk, 2026-09-24). Centred together; on a narrower screen the plans panel drops
+   below rather than squeezing the ladder. */
+#trade-wrap .tr-panels { display: flex; gap: 14px; align-items: flex-start;
+                         justify-content: center; }
+#trade-wrap .tr-main { flex: 1 1 auto; min-width: 0; margin: 0; }
+#trade-wrap .plan-panel { flex: 0 0 300px; margin: 0; padding: 12px 14px 14px; }
+/* Side by side while both fit: 1,326 + 14 + 300 and the page's own margins. */
+@media (max-width: 1686px) {
+    #trade-wrap .tr-panels { flex-wrap: wrap; }
+    #trade-wrap .plan-panel { flex: 1 1 100%; max-width: 1326px; }
+}
+.plan-head { display: flex; flex-direction: column; gap: 3px; padding-bottom: 8px;
+             margin-bottom: 8px; border-bottom: 1px solid var(--rule); }
+.plan-sub { margin: 10px 0 5px; }
+.plan-status { font-size: var(--fs-micro); line-height: 14px; min-height: 14px; }
+.plan-quiet { color: var(--t3); }
+.plan-dirty { color: var(--warn); font-weight: 600; }
+.plan-msg   { color: var(--mark); }
+.plan-empty { font-size: var(--fs-micro); color: var(--t3); padding: 2px 2px 0; }
+.plan-empty:empty { display: none; }
+
+/* Plans and versions are lists: a row per item, the picked one filled in the accent.
+   Built on Dash's radio list with the circles hidden, so every rule names its labels. */
+/* Plans tall, versions short (desk, 2026-10-08): several plans are worked at once, not
+   many versions of one -- about nine plans in view and three versions. */
+.plan-list { display: flex; flex-direction: column; gap: 3px; max-height: 440px;
+             overflow-y: auto; }
+.plan-list.plan-vers { max-height: 150px; }
+.plan-list label { display: block; margin: 0 !important; padding: 6px 8px;
+                   border-radius: 7px; border: 1px solid transparent; cursor: pointer;
+                   color: var(--t2); background: transparent; }
+.plan-list label:hover { background: var(--fill-hover); color: var(--t1); }
+.plan-list label:has(input:checked) { background: var(--accent-bg);
+                                      border-color: var(--accent-brd); color: var(--t1); }
+.plan-list input { display: none; }
+/* Each label is two lines of plain text: the first (name, or version and time) bold,
+   the second (versions / what it said and why) small. */
+.plan-list .dash-options-list-option-text { display: block; white-space: pre-line;
+                                            font-size: var(--fs-micro); line-height: 15px;
+                                            color: var(--t2); overflow-wrap: anywhere; }
+.plan-list .dash-options-list-option-text::first-line { font-size: var(--fs-ui);
+                                                        font-weight: 600; color: var(--t1); }
+
+/* One compact button style for the panel (desk, 2026-09-25), each beside what it acts
+   on. `primary` is the action you take most -- Save version -- filled in the accent;
+   `danger` outlines the two that take something away (archive, delete); `warn` is Reset.
+   `sm` is the small size used in the head and beside the list titles. */
+.plan-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.plan-subrow { margin: 10px 0 5px; }
+.plan-subrow .plan-sub { margin: 0; white-space: nowrap; }
+.plan-btn {
+    height: 28px; padding: 0 12px; border-radius: 7px; cursor: pointer;
+    font-family: var(--ff); font-size: var(--fs-ui); font-weight: 600; white-space: nowrap;
+    background: var(--fill); color: var(--t1); border: 1px solid var(--stroke);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+.plan-btn:hover:not(:disabled) { background: var(--fill-hover);
+                                 border-color: var(--stroke-strong); }
+.plan-btn.sm { height: 22px; padding: 0 8px; border-radius: 6px; font-size: var(--fs-micro);
+               letter-spacing: 0.02em; }
+.plan-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.plan-btn.primary:hover:not(:disabled) { background: var(--accent); filter: brightness(1.12); }
+.plan-btn.danger { background: transparent; color: var(--mark); border-color: var(--mark); }
+.plan-btn.danger:hover:not(:disabled) { background: var(--mark); color: #fff;
+                                        border-color: var(--mark); }
+.plan-btn.danger.armed { background: var(--mark); color: #fff; }
+.plan-btn.warn { background: transparent; color: var(--warn); border-color: var(--warn); }
+.plan-btn.warn:hover:not(:disabled) { background: var(--warn-bg); border-color: var(--warn); }
+.plan-btn:disabled { opacity: 0.35; cursor: default; }
+.plan-btn.primary:disabled { background: var(--fill); border-color: var(--stroke);
+                             color: var(--t2); opacity: 0.6; }
+.plan-head .plan-row .card-title { margin: 0; }
+.plan-head-btns { display: flex; gap: 6px; }
+
+.plan-form { display: flex; flex-direction: column; gap: 6px; }
+.plan-head + .plan-form { margin-bottom: 2px; }
+.plan-form .plan-in { flex: 1 1 auto; min-width: 0; width: auto !important; height: 28px;
+                      padding: 0 8px; display: flex; align-items: center; }
+.plan-form .plan-in input { text-align: left !important; height: 26px; }
+.plan-form .plan-btn { flex: 0 0 104px; }
+/* Light theme's quiet grey is too faint on the white card for text you act on. */
+.plan-panel .plan-sub, .plan-panel .plan-quiet { color: var(--t2); }

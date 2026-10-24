@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade</title>
+<!-- A browser port of Mathur-Git/trade-board (the Trade page of the STIR board): same rules, same
+     layout, same styles. The arithmetic (core.js) is checked number-for-number against the Python
+     original by trade_check/tb_parity.py. Plans are kept in this browser (localStorage), not in a
+     plans/ folder. -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="root" class="theme-dark">
+ <div class="shell">
+  <div class="global-bar">
+   <div id="page" class="seg-ctrl"><label><input type="radio" name="page" value="Trade" checked><span class="dash-options-list-option-text">Trade</span></label></div>
+   <div class="title-block"><span class="page-title">In and out</span></div>
+   <div class="bar-right"><button id="theme-btn" class="theme-btn">Light</button></div>
+  </div>
+
+  <div id="trade-wrap" style="display:block">
+   <div class="tr-panels">
+    <div id="tr-main" class="chart-card panel tr-main">
+     <div class="panel-head">
+      <div id="tr-inst" class="seg-ctrl" data-radio>
+       <label><input type="radio" name="tr-inst" value="SR3" checked><span class="dash-options-list-option-text">SR3</span></label><label><input type="radio" name="tr-inst" value="ZQ"><span class="dash-options-list-option-text">ZQ</span></label>
+      </div>
+      <div id="tr-side" class="seg-ctrl" data-radio>
+       <label><input type="radio" name="tr-side" value="buy" checked><span class="dash-options-list-option-text">Long</span></label><label><input type="radio" name="tr-side" value="sell"><span class="dash-options-list-option-text">Short</span></label>
+      </div>
+      <div class="rungs-ctl">
+       <span class="lad-lbl">rungs</span>
+       <button id="tr-rungs-dn" class="theme-btn rungs-btn" title="fewer rungs">▼</button>
+       <span id="tr-rungs-val" class="rungs-val">10</span>
+       <button id="tr-rungs-up" class="theme-btn rungs-btn" title="more rungs">▲</button>
+      </div>
+      <button id="tr-plan-save" class="plan-btn primary tr-save" disabled>Save version</button>
+      <div class="head-break"></div>
+      <div class="rungs-ctl">
+       <span class="lad-lbl">exit</span>
+       <div id="tr-exit-on" class="seg-ctrl" data-radio>
+        <label><input type="radio" name="tr-exit-on" value="on" checked><span class="dash-options-list-option-text">On</span></label><label><input type="radio" name="tr-exit-on" value="off"><span class="dash-options-list-option-text">Off</span></label>
+       </div>
+      </div>
+      <div class="rungs-ctl">
+       <span class="lad-lbl">peak in</span>
+       <div id="tr-shape" class="seg-ctrl" data-radio>
+        <label><input type="radio" name="tr-shape" value="off" checked><span class="dash-options-list-option-text">Off</span></label><label><input type="radio" name="tr-shape" value="broad"><span class="dash-options-list-option-text">Broad</span></label><label><input type="radio" name="tr-shape" value="medium"><span class="dash-options-list-option-text">Medium</span></label><label><input type="radio" name="tr-shape" value="narrow"><span class="dash-options-list-option-text">Narrow</span></label>
+       </div>
+      </div>
+      <div class="rungs-ctl tr-peak-out-ctl">
+       <span class="lad-lbl">peak out</span>
+       <div id="tr-shape-out" class="seg-ctrl" data-radio>
+        <label><input type="radio" name="tr-shape-out" value="off" checked><span class="dash-options-list-option-text">Off</span></label><label><input type="radio" name="tr-shape-out" value="broad"><span class="dash-options-list-option-text">Broad</span></label><label><input type="radio" name="tr-shape-out" value="medium"><span class="dash-options-list-option-text">Medium</span></label><label><input type="radio" name="tr-shape-out" value="narrow"><span class="dash-options-list-option-text">Narrow</span></label>
+       </div>
+      </div>
+      <div class="lad-btns">
+       <button id="tr-clear" class="theme-btn">Clear skips</button>
+       <button id="tr-clear-held" class="theme-btn">Clear filled</button>
+       <button id="tr-clear-sold" class="theme-btn">Clear sold</button>
+       <button id="tr-clear-all" class="theme-btn danger">All clear</button>
+      </div>
+     </div>
+
+     <div class="lad-grid">
+      <div class="lad-left">
+       <div class="lad-book">
+        <table class="lad-table">
+         <thead><tr class="lad-head">
+          <th class="lad-mark-c mk-in"></th>
+          <th class="lad-mark-c mk-out"></th>
+          <th class="lad-held-c">Filled</th>
+          <th class="tr-in-c tr-span" colspan="2">In</th>
+          <th class="lad-px-c lad-px-head"><div class="lad-entry-in"><input id="tr-mark" type="text" inputmode="decimal" placeholder="bid" autocomplete="off"></div></th>
+          <th class="tr-out-c tr-span" colspan="2">Out</th>
+          <th class="lad-held-c ex-sold-c">Sold</th>
+          <th class="tr-pos-c">Pos</th>
+          <th class="tr-left-c">Left</th>
+          <th class="tr-risk-c tr-risk-f">Filled risk</th>
+          <th class="tr-risk-c">In risk</th>
+          <th class="tr-risk-c tr-risk-o">Out regret</th>
+          <th class="tr-peak-c" title="peak in">●</th>
+          <th class="tr-peak-c tr-peak-out-c" title="peak out">●</th>
+         </tr></thead>
+         <tbody id="tr-rows"></tbody>
+        </table>
+       </div>
+       <div id="tr-caption" class="card-sub tr-caption">in below the line, out above it - click a size to skip</div>
+      </div>
+      <div class="lad-right">
+       <div class="card-head"><div id="tr-title" class="card-title"></div></div>
+       <table class="lvl-table" id="tr-levels">
+        <thead><tr><th></th><th>in</th><th>out</th></tr></thead>
+        <tbody>
+         <tr><td class="lbl">start</td>
+          <td class="lvl-cell"><div class="lad-input"><input id="tr-entry" type="text" inputmode="decimal" autocomplete="off"></div><div id="tr-entry-use" class="lvl-use"></div></td>
+          <td class="lvl-cell"><div class="lad-input"><input id="tr-first" type="text" inputmode="decimal" autocomplete="off"></div><div id="tr-first-use" class="lvl-use"></div></td></tr>
+         <tr><td class="lbl">end</td>
+          <td class="lvl-cell"><div class="lad-input"><input id="tr-stop" type="text" inputmode="decimal" autocomplete="off"></div><div id="tr-stop-use" class="lvl-use"></div></td>
+          <td class="lvl-cell"><div class="lad-input"><input id="tr-target" type="text" inputmode="decimal" autocomplete="off"></div><div id="tr-target-use" class="lvl-use"></div></td></tr>
+         <tr><td class="lbl">out by</td>
+          <td class="lvl-cell"><div class="lad-input"><input id="tr-outby" type="text" inputmode="decimal" autocomplete="off"></div><div id="tr-outby-use" class="lvl-use"></div></td>
+          <td></td></tr>
+         <tr><td class="lbl">average</td>
+          <td id="tr-avg-in" class="lvl-avg in">—</td>
+          <td id="tr-avg-out" class="lvl-avg out">—</td></tr>
+         <tr><td class="lbl">max loss $</td>
+          <td class="lvl-cell loss-cell"><div class="loss-step"><button id="tr-loss-dn" class="theme-btn rungs-btn" disabled>▼</button><button id="tr-loss-up" class="theme-btn rungs-btn">▲</button></div><div class="lad-input"><input id="tr-loss" type="text" inputmode="decimal" placeholder="required" autocomplete="off"></div></td>
+          <td></td></tr>
+         <tr><td class="lbl">p&amp;l $</td>
+          <td id="tr-pnl-in" class="lvl-avg in">—</td>
+          <td id="tr-pnl-out" class="lvl-avg out">—</td></tr>
+         <tr><td class="lbl">settle</td>
+          <td class="lvl-cell"><div class="lad-input"><input id="tr-settle" type="text" inputmode="decimal" autocomplete="off"></div><div id="tr-settle-use" class="lvl-use"></div></td>
+          <td></td></tr>
+         <tr><td class="lbl">from settle $</td>
+          <td id="tr-stl-in" class="lvl-avg in">—</td>
+          <td id="tr-stl-out" class="lvl-avg out">—</td></tr>
+        </tbody>
+       </table>
+       <div id="tr-depth-cap" class="card-sub lad-depth-head">if it fills this far, then works out - click a row</div>
+       <table id="tr-depth" class="lad-depth"></table>
+       <div id="tr-exit-head" class="card-sub lad-depth-head"></div>
+       <table id="tr-exit" class="lad-depth"></table>
+       <div id="tr-foot" class="foot"></div>
+      </div>
+     </div>
+    </div>
+
+    <div class="chart-card panel plan-panel">
+     <div class="plan-head">
+      <div class="plan-row">
+       <div class="card-title">Plans</div>
+       <div class="plan-head-btns">
+        <button id="tr-plan-reset" class="plan-btn sm warn" disabled>Reset</button>
+        <button id="tr-plan-blank" class="plan-btn sm">+ New plan</button>
+       </div>
+      </div>
+      <div id="tr-plan-status" class="plan-status"></div>
+     </div>
+     <div class="plan-form">
+      <div class="plan-row">
+       <div class="lad-input plan-in"><input id="tr-plan-name" type="text" placeholder="new plan name" autocomplete="off"></div>
+       <button id="tr-plan-new" class="plan-btn">Save as new</button>
+      </div>
+     </div>
+     <div class="plan-row plan-subrow">
+      <div class="card-sub plan-sub">saved plans</div>
+      <button id="tr-plan-archive" class="plan-btn sm danger">Archive plan</button>
+     </div>
+     <div id="tr-plan" class="plan-list"></div>
+     <div id="tr-plan-empty" class="plan-empty"></div>
+     <div class="plan-row plan-subrow">
+      <div class="card-sub plan-sub">versions — newest first</div>
+      <button id="tr-plan-del" class="plan-btn sm danger" disabled>Delete version</button>
+     </div>
+     <div id="tr-plan-ver" class="plan-list plan-vers"></div>
+     <div id="tr-plan-ver-empty" class="plan-empty"></div>
+     <div class="card-sub plan-sub">note for the next version</div>
+     <div class="plan-form">
+      <div class="lad-input plan-in"><input id="tr-plan-note" type="text" placeholder="what changed (optional)" autocomplete="off"></div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+<script src="core.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>

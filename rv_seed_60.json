@@ -1,0 +1,1930 @@
+{
+ "asof": "2026-10-14",
+ "lookback": 60,
+ "generated": "2026-10-19T17:43",
+ "criteria": "Hedged packages only (panel1 - k x panel2, panel2 1-2 contracts further out). 120 settles, fixed contracts: half-life 1.5-10 (60D <=8), variance ratio <0.6, |rho to rate level| <0.25, p10-p90 >=2.5bp and >=4x typical daily move, mean drift <0.6 sd, >=3 fades with >=70% back to mean in 20D. SINGLE uses relaxed rules (no half-life floor, VR<0.7, |rho|<0.3, p10-p90 >=2bp and >=2.5x typ, drift <0.75, fades >=60%)",
+ "groups": {
+  "single": {
+   "tested": 151,
+   "passed": 2,
+   "cats": [
+    {
+     "name": "SINGLE",
+     "tested": 151,
+     "passed": 2
+    }
+   ],
+   "items": [
+    {
+     "id": "single_SINGLE_0",
+     "cat": "SINGLE",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mdblfly",
+       "anchor": "M8"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -1.0/+2.5, min/max -2.0/+3.5, half-life 1.8, fades 3/3, rho -0.17"
+    },
+    {
+     "id": "single_SINGLE_1",
+     "cat": "SINGLE",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mdblfly",
+       "anchor": "U8"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -0.5/+2.0, min/max -1.5/+3.0, half-life 0.4, fades 4/4, rho +0.15"
+    },
+    {
+     "id": "single_SINGLE_2",
+     "cat": "SINGLE",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3m",
+       "anchor": "U7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -5.5/+1.5, min/max -7.5/+2.5, half-life 7.2, fades 1/1, rho -0.18 | FAILS: trends; mean drifted; only 1 fades"
+    }
+   ]
+  },
+  "ss": {
+   "tested": 140,
+   "passed": 0,
+   "cats": [
+    {
+     "name": "12M vs 6M 1:1",
+     "tested": 27,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 6M 1:2",
+     "tested": 26,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 1:1",
+     "tested": 30,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 1:2",
+     "tested": 29,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 3M(n+2) 1:2",
+     "tested": 14,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 3M(n+2) 1:3",
+     "tested": 14,
+     "passed": 0
+    }
+   ],
+   "items": [
+    {
+     "id": "ss_12Mvs6M1-1_0",
+     "cat": "12M vs 6M 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "M7"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "Z7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -9.0/+8.5, min/max -12.0/+10.5, half-life 12.8, fades 1/1, rho -0.03 | FAILS: slow reversion (hl 13); trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_12Mvs6M1-1_1",
+     "cat": "12M vs 6M 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "U7"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "H8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -9.0/+2.0, min/max -12.0/+4.5, half-life 6.7, fades 1/1, rho -0.16 | FAILS: trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_12Mvs6M1-1_2",
+     "cat": "12M vs 6M 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "U7"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "Z7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -6.5/+1.5, min/max -8.5/+3.0, half-life 5.8, fades 1/1, rho -0.19 | FAILS: trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_12Mvs6M1-2_0",
+     "cat": "12M vs 6M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "U7"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "Z7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.0/+1.5, min/max -2.0/+2.0, half-life 2.2, fades 5/5, rho +0.07 | FAILS: mean drifted"
+    },
+    {
+     "id": "ss_12Mvs6M1-2_1",
+     "cat": "12M vs 6M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "M8"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "Z8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -2.0/+1.0, min/max -2.5/+1.5, half-life 5.6, fades 1/1, rho +0.04 | FAILS: slow reversion (hl 6); only 1 fades"
+    },
+    {
+     "id": "ss_12Mvs6M1-2_2",
+     "cat": "12M vs 6M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "H8"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "M8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.5/+0.5, min/max -2.0/+1.0, half-life 1.7, fades 1/1, rho -0.04 | FAILS: range only 2.0bp; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_6Mvs3M1-1_0",
+     "cat": "6M vs 3M 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "U7"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "H8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -8.0/+1.5, min/max -10.0/+3.5, half-life 7.0, fades 1/1, rho +0.03 | FAILS: trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_6Mvs3M1-1_1",
+     "cat": "6M vs 3M 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "U7"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "Z7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -5.5/+1.5, min/max -7.5/+2.5, half-life 7.2, fades 1/1, rho -0.18 | FAILS: trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_6Mvs3M1-1_2",
+     "cat": "6M vs 3M 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "Z0"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "H1"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 +2.0/+3.5, min/max +1.5/+4.0, half-life 9.6, fades 2/2, rho +0.10 | FAILS: trends; range only 1.5bp; mean drifted; only 2 fades"
+    },
+    {
+     "id": "ss_6Mvs3M1-2_0",
+     "cat": "6M vs 3M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "H8"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "M8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.5/+0.5, min/max -2.0/+0.5, half-life 2.9, fades 1/1, rho +0.04 | FAILS: range only 2.0bp; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_6Mvs3M1-2_1",
+     "cat": "6M vs 3M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "U8"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "H9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.5/+1.0, min/max -1.5/+1.0, half-life 0.9, fades 6/6, rho -0.03 | FAILS: half-life 0.9 (tick bounce); range only 2.5bp"
+    },
+    {
+     "id": "ss_6Mvs3M1-2_2",
+     "cat": "6M vs 3M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "H0"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "M0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.0/+0.0, min/max -1.0/+0.0, half-life 0.6, fades 6/6, rho +0.16 | FAILS: half-life 0.6 (tick bounce); range only 1.0bp"
+    },
+    {
+     "id": "ss_3Mvs3M(n+2)1-2_0",
+     "cat": "3M vs 3M(n+2) 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3m",
+       "anchor": "M9"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.0/-0.5, min/max -3.5/+0.5, half-life 2.4, fades 2/2, rho -0.17 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "ss_3Mvs3M(n+2)1-2_1",
+     "cat": "3M vs 3M(n+2) 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3m",
+       "anchor": "U9"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "H0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.5/-1.0, min/max -3.5/-0.5, half-life 2.1, fades 5/5, rho -0.21 | FAILS: range only 2.5bp; mean drifted"
+    },
+    {
+     "id": "ss_3Mvs3M(n+2)1-2_2",
+     "cat": "3M vs 3M(n+2) 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3m",
+       "anchor": "M0"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "Z0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -4.5/-3.0, min/max -5.0/-2.0, half-life 1.7, fades 2/2, rho -0.06 | FAILS: range only 1.5bp; mean drifted; only 2 fades"
+    },
+    {
+     "id": "ss_3Mvs3M(n+2)1-3_0",
+     "cat": "3M vs 3M(n+2) 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3m",
+       "anchor": "M9"
+      },
+      {
+       "w": -3,
+       "fam": "3m",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -5.0/-0.5, min/max -6.0/+1.5, half-life 5.1, fades 1/1, rho -0.09 | FAILS: mean drifted; only 1 fades"
+    },
+    {
+     "id": "ss_3Mvs3M(n+2)1-3_1",
+     "cat": "3M vs 3M(n+2) 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3m",
+       "anchor": "M0"
+      },
+      {
+       "w": -3,
+       "fam": "3m",
+       "anchor": "Z0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -8.0/-5.0, min/max -9.0/-3.5, half-life 3.8, fades 2/2, rho -0.06 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "ss_3Mvs3M(n+2)1-3_2",
+     "cat": "3M vs 3M(n+2) 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3m",
+       "anchor": "H8"
+      },
+      {
+       "w": -3,
+       "fam": "3m",
+       "anchor": "U8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -4.5/+5.5, min/max -6.0/+7.5, half-life 16.9, fades 1/1, rho +0.20 | FAILS: slow reversion (hl 17); trends; mean drifted; only 1 fades"
+    }
+   ]
+  },
+  "fs": {
+   "tested": 416,
+   "passed": 3,
+   "cats": [
+    {
+     "name": "3M FLY vs 3M",
+     "tested": 58,
+     "passed": 0
+    },
+    {
+     "name": "3M FLY vs 6M",
+     "tested": 54,
+     "passed": 0
+    },
+    {
+     "name": "3M FLY vs 12M",
+     "tested": 46,
+     "passed": 0
+    },
+    {
+     "name": "6M FLY vs 3M",
+     "tested": 52,
+     "passed": 0
+    },
+    {
+     "name": "6M FLY vs 6M",
+     "tested": 52,
+     "passed": 0
+    },
+    {
+     "name": "6M FLY vs 12M",
+     "tested": 46,
+     "passed": 0
+    },
+    {
+     "name": "12M FLY vs 3M",
+     "tested": 36,
+     "passed": 3
+    },
+    {
+     "name": "12M FLY vs 6M",
+     "tested": 36,
+     "passed": 0
+    },
+    {
+     "name": "12M FLY vs 12M",
+     "tested": 36,
+     "passed": 0
+    }
+   ],
+   "items": [
+    {
+     "id": "fs_3MFLYvs3M_0",
+     "cat": "3M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "U9"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -4.5/-0.5, min/max -5.5/+1.5, half-life 5.3, fades 2/2, rho -0.04 | FAILS: trends; mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_3MFLYvs3M_1",
+     "cat": "3M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "U9"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -2.5/-0.5, min/max -3.0/+0.5, half-life 2.3, fades 3/3, rho -0.09 | FAILS: range only 2.0bp; mean drifted"
+    },
+    {
+     "id": "fs_3MFLYvs3M_2",
+     "cat": "3M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "U0"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "Z0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -7.5/-4.0, min/max -8.5/-3.0, half-life 5.2, fades 2/2, rho -0.14 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_3MFLYvs6M_0",
+     "cat": "3M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "H7"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "M7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -5.5/+24.0, min/max -12.0/+30.0, half-life 7.8, fades 1/1, rho +0.26 | FAILS: trends; rate beta (rho +0.26); mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_3MFLYvs6M_1",
+     "cat": "3M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "M7"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "U7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 +3.0/+22.5, min/max -3.5/+27.5, half-life 4.6, fades 2/2, rho +0.31 | FAILS: trends; rate beta (rho +0.31); mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_3MFLYvs6M_2",
+     "cat": "3M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "M0"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "U0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -14.5/-7.5, min/max -15.5/-4.5, half-life 5.1, fades 2/2, rho +0.09 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_3MFLYvs12M_0",
+     "cat": "3M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "H7"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "M7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -7.5/+33.0, min/max -18.0/+44.0, half-life 7.0, fades 1/1, rho +0.30 | FAILS: trends; rate beta (rho +0.30); mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_3MFLYvs12M_1",
+     "cat": "3M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "H7"
+      },
+      {
+       "w": -1,
+       "fam": "12m",
+       "anchor": "M7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 +1.5/+21.5, min/max -4.5/+25.0, half-life 5.2, fades 1/1, rho +0.38 | FAILS: trends; rate beta (rho +0.38); mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_3MFLYvs12M_2",
+     "cat": "3M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "3mfly",
+       "anchor": "U9"
+      },
+      {
+       "w": -1,
+       "fam": "12m",
+       "anchor": "H0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -12.5/-5.0, min/max -13.5/-3.0, half-life 18.2, fades 1/1, rho +0.02 | FAILS: slow reversion (hl 18); trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_6MFLYvs3M_0",
+     "cat": "6M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "H0"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "M0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -5.0/-3.0, min/max -5.0/-2.5, half-life 1.4, fades 7/7, rho +0.17 | FAILS: half-life 1.4 (tick bounce); range only 2.0bp; mean drifted"
+    },
+    {
+     "id": "fs_6MFLYvs3M_1",
+     "cat": "6M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "U9"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -4.0/-2.0, min/max -4.0/-1.5, half-life 2.6, fades 4/4, rho -0.15 | FAILS: range only 2.0bp; mean drifted"
+    },
+    {
+     "id": "fs_6MFLYvs3M_2",
+     "cat": "6M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "H9"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "U9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.5/-0.5, min/max -4.0/+0.5, half-life 2.0, fades 2/2, rho +0.07 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_6MFLYvs6M_0",
+     "cat": "6M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "H0"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "U0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -16.0/-9.0, min/max -17.0/-6.5, half-life 3.4, fades 2/2, rho +0.11 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_6MFLYvs6M_1",
+     "cat": "6M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "H0"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "M0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -14.5/-7.0, min/max -15.0/-3.5, half-life 4.9, fades 1/1, rho +0.15 | FAILS: mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_6MFLYvs6M_2",
+     "cat": "6M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "H0"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "M0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -8.5/-5.0, min/max -8.5/-3.0, half-life 2.4, fades 1/1, rho +0.16 | FAILS: mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_6MFLYvs12M_0",
+     "cat": "6M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "Z9"
+      },
+      {
+       "w": -1,
+       "fam": "12m",
+       "anchor": "H0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -14.5/-6.5, min/max -15.0/-3.5, half-life 7.5, fades 1/1, rho +0.13 | FAILS: mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_6MFLYvs12M_1",
+     "cat": "6M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "Z9"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "H0"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -26.5/-11.0, min/max -28.0/-5.0, half-life 11.7, fades 1/1, rho +0.09 | FAILS: slow reversion (hl 12); trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_6MFLYvs12M_2",
+     "cat": "6M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "H7"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "M7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 +5.5/+40.5, min/max -6.5/+46.0, half-life 4.9, fades 2/2, rho +0.36 | FAILS: trends; rate beta (rho +0.36); mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_12MFLYvs3M_0",
+     "cat": "12M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "U8"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "H9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -6.5/-4.0, min/max -7.0/-3.0, half-life 2.6, fades 3/3, rho -0.05"
+    },
+    {
+     "id": "fs_12MFLYvs3M_1",
+     "cat": "12M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "Z8"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "M9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -8.0/-5.5, min/max -9.0/-5.0, half-life 3.9, fades 3/3, rho +0.03"
+    },
+    {
+     "id": "fs_12MFLYvs3M_2",
+     "cat": "12M FLY vs 3M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "H9"
+      },
+      {
+       "w": -1,
+       "fam": "3m",
+       "anchor": "U9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -8.5/-6.0, min/max -9.5/-5.5, half-life 2.7, fades 4/4, rho -0.07"
+    },
+    {
+     "id": "fs_12MFLYvs6M_0",
+     "cat": "12M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "U8"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "H9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -7.5/-3.5, min/max -8.0/-2.5, half-life 5.0, fades 3/3, rho +0.19 | FAILS: mean drifted"
+    },
+    {
+     "id": "fs_12MFLYvs6M_1",
+     "cat": "12M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "Z8"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "H9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -8.0/-5.0, min/max -8.5/-4.0, half-life 5.5, fades 3/3, rho +0.06 | FAILS: trends; mean drifted"
+    },
+    {
+     "id": "fs_12MFLYvs6M_2",
+     "cat": "12M FLY vs 6M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "Z8"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "M9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -9.0/-5.5, min/max -10.0/-4.5, half-life 4.2, fades 2/2, rho +0.17 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "fs_12MFLYvs12M_0",
+     "cat": "12M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "H9"
+      },
+      {
+       "w": -1,
+       "fam": "12m",
+       "anchor": "U9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -15.5/-7.5, min/max -16.0/-6.5, half-life 11.9, fades 1/1, rho -0.03 | FAILS: slow reversion (hl 12); trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_12MFLYvs12M_1",
+     "cat": "12M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "H9"
+      },
+      {
+       "w": -1,
+       "fam": "12m",
+       "anchor": "M9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -13.5/-6.0, min/max -14.0/-4.0, half-life 14.5, fades 1/1, rho +0.10 | FAILS: slow reversion (hl 14); trends; mean drifted; only 1 fades"
+    },
+    {
+     "id": "fs_12MFLYvs12M_2",
+     "cat": "12M FLY vs 12M",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "H7"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "M7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 +5.5/+32.0, min/max +1.5/+39.5, half-life 6.8, fades 2/2, rho +0.43 | FAILS: trends; rate beta (rho +0.43); mean drifted; only 2 fades"
+    }
+   ]
+  },
+  "ff": {
+   "tested": 130,
+   "passed": 2,
+   "cats": [
+    {
+     "name": "12M FLY vs 6M FLY 1:2",
+     "tested": 18,
+     "passed": 0
+    },
+    {
+     "name": "12M FLY vs 6M FLY 1:3",
+     "tested": 18,
+     "passed": 0
+    },
+    {
+     "name": "6M FLY vs 3M FLY 1:2",
+     "tested": 26,
+     "passed": 0
+    },
+    {
+     "name": "6M FLY vs 3M FLY 1:3",
+     "tested": 26,
+     "passed": 0
+    },
+    {
+     "name": "9M FLY vs 6M FLY 1:1",
+     "tested": 23,
+     "passed": 1
+    },
+    {
+     "name": "12M FLY vs 9M FLY 1:1",
+     "tested": 19,
+     "passed": 1
+    }
+   ],
+   "items": [
+    {
+     "id": "ff_12MFLYvs6MFLY1-2_0",
+     "cat": "12M FLY vs 6M FLY 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "U7"
+      },
+      {
+       "w": -2,
+       "fam": "6mfly",
+       "anchor": "H8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -9.0/+1.5, min/max -10.5/+3.0, half-life 6.0, fades 3/3, rho +0.21 | FAILS: mean drifted"
+    },
+    {
+     "id": "ff_12MFLYvs6MFLY1-2_1",
+     "cat": "12M FLY vs 6M FLY 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "U7"
+      },
+      {
+       "w": -2,
+       "fam": "6mfly",
+       "anchor": "Z7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.5/+2.0, min/max -5.0/+2.5, half-life 3.1, fades 3/3, rho +0.13 | FAILS: mean drifted"
+    },
+    {
+     "id": "ff_12MFLYvs6MFLY1-2_2",
+     "cat": "12M FLY vs 6M FLY 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "Z8"
+      },
+      {
+       "w": -2,
+       "fam": "6mfly",
+       "anchor": "H9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -5.5/-1.5, min/max -6.0/-1.0, half-life 1.4, fades 2/2, rho -0.04 | FAILS: half-life 1.4 (tick bounce); mean drifted; only 2 fades"
+    },
+    {
+     "id": "ff_12MFLYvs6MFLY1-3_0",
+     "cat": "12M FLY vs 6M FLY 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "M7"
+      },
+      {
+       "w": -3,
+       "fam": "6mfly",
+       "anchor": "U7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 +3.0/+9.0, min/max +1.5/+11.0, half-life 1.7, fades 3/3, rho -0.00 | FAILS: mean drifted"
+    },
+    {
+     "id": "ff_12MFLYvs6MFLY1-3_1",
+     "cat": "12M FLY vs 6M FLY 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "U7"
+      },
+      {
+       "w": -3,
+       "fam": "6mfly",
+       "anchor": "H8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -6.5/+1.0, min/max -8.5/+3.0, half-life 2.7, fades 3/3, rho +0.18 | FAILS: mean drifted"
+    },
+    {
+     "id": "ff_12MFLYvs6MFLY1-3_2",
+     "cat": "12M FLY vs 6M FLY 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "H7"
+      },
+      {
+       "w": -3,
+       "fam": "6mfly",
+       "anchor": "M7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.5/+5.5, min/max -6.5/+6.5, half-life 4.8, fades 2/2, rho +0.10 | FAILS: only 2 fades"
+    },
+    {
+     "id": "ff_6MFLYvs3MFLY1-2_0",
+     "cat": "6M FLY vs 3M FLY 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "M8"
+      },
+      {
+       "w": -2,
+       "fam": "3mfly",
+       "anchor": "U8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.0/+1.0, min/max -1.5/+1.0, half-life 1.0, fades 1/1, rho -0.08 | FAILS: half-life 1.0 (tick bounce); range only 2.0bp; mean drifted; only 1 fades"
+    },
+    {
+     "id": "ff_6MFLYvs3MFLY1-2_1",
+     "cat": "6M FLY vs 3M FLY 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "H8"
+      },
+      {
+       "w": -2,
+       "fam": "3mfly",
+       "anchor": "U8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -2.5/+1.5, min/max -3.0/+2.0, half-life 3.6, fades 2/2, rho -0.07 | FAILS: mean drifted; only 2 fades"
+    },
+    {
+     "id": "ff_6MFLYvs3MFLY1-2_2",
+     "cat": "6M FLY vs 3M FLY 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "U9"
+      },
+      {
+       "w": -2,
+       "fam": "3mfly",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -2.0/-0.5, min/max -2.0/+0.0, half-life 1.0, fades 4/4, rho -0.01 | FAILS: half-life 1.0 (tick bounce); range only 1.5bp; mean drifted"
+    },
+    {
+     "id": "ff_6MFLYvs3MFLY1-3_0",
+     "cat": "6M FLY vs 3M FLY 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "U7"
+      },
+      {
+       "w": -3,
+       "fam": "3mfly",
+       "anchor": "H8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -4.0/+2.0, min/max -6.0/+3.0, half-life 2.6, fades 5/5, rho +0.15 | FAILS: mean drifted"
+    },
+    {
+     "id": "ff_6MFLYvs3MFLY1-3_1",
+     "cat": "6M FLY vs 3M FLY 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "M9"
+      },
+      {
+       "w": -3,
+       "fam": "3mfly",
+       "anchor": "U9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.0/+1.0, min/max -1.5/+1.5, half-life 0.6, fades 5/5, rho -0.03 | FAILS: half-life 0.6 (tick bounce); range only 2.0bp; mean drifted"
+    },
+    {
+     "id": "ff_6MFLYvs3MFLY1-3_2",
+     "cat": "6M FLY vs 3M FLY 1:3",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6mfly",
+       "anchor": "U7"
+      },
+      {
+       "w": -3,
+       "fam": "3mfly",
+       "anchor": "Z7"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -1.5/+1.0, min/max -2.0/+2.0, half-life 1.8, fades 3/3, rho -0.05 | FAILS: mean drifted"
+    },
+    {
+     "id": "ff_9MFLYvs6MFLY1-1_0",
+     "cat": "9M FLY vs 6M FLY 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "9mfly",
+       "anchor": "M8"
+      },
+      {
+       "w": -1,
+       "fam": "6mfly",
+       "anchor": "Z8"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -2.0/+1.0, min/max -2.5/+1.5, half-life 3.6, fades 3/3, rho -0.01"
+    },
+    {
+     "id": "ff_9MFLYvs6MFLY1-1_1",
+     "cat": "9M FLY vs 6M FLY 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "9mfly",
+       "anchor": "M9"
+      },
+      {
+       "w": -1,
+       "fam": "6mfly",
+       "anchor": "U9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.0/-1.5, min/max -3.5/-1.5, half-life 1.7, fades 5/5, rho -0.12 | FAILS: range only 1.5bp; mean drifted"
+    },
+    {
+     "id": "ff_9MFLYvs6MFLY1-1_2",
+     "cat": "9M FLY vs 6M FLY 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "9mfly",
+       "anchor": "H9"
+      },
+      {
+       "w": -1,
+       "fam": "6mfly",
+       "anchor": "M9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.0/-1.5, min/max -3.5/-1.0, half-life 3.5, fades 3/3, rho +0.12 | FAILS: range only 1.5bp; mean drifted"
+    },
+    {
+     "id": "ff_12MFLYvs9MFLY1-1_0",
+     "cat": "12M FLY vs 9M FLY 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "U8"
+      },
+      {
+       "w": -1,
+       "fam": "9mfly",
+       "anchor": "H9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -3.0/+0.0, min/max -3.5/+0.5, half-life 1.6, fades 3/3, rho +0.18"
+    },
+    {
+     "id": "ff_12MFLYvs9MFLY1-1_1",
+     "cat": "12M FLY vs 9M FLY 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "Z8"
+      },
+      {
+       "w": -1,
+       "fam": "9mfly",
+       "anchor": "H9"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -4.0/-1.5, min/max -4.5/-1.0, half-life 3.3, fades 2/2, rho +0.13 | FAILS: range only 2.5bp; mean drifted; only 2 fades"
+    },
+    {
+     "id": "ff_12MFLYvs9MFLY1-1_2",
+     "cat": "12M FLY vs 9M FLY 1:1",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12mfly",
+       "anchor": "U8"
+      },
+      {
+       "w": -1,
+       "fam": "9mfly",
+       "anchor": "Z8"
+      }
+     ],
+     "ok": false,
+     "note": "120D p10/p90 -3.5/-1.5, min/max -4.0/-1.0, half-life 5.6, fades 3/3, rho +0.11 | FAILS: trends; range only 2.0bp; mean drifted"
+    }
+   ]
+  },
+  "sx": {
+   "tested": 2436,
+   "passed": 12,
+   "cats": [
+    {
+     "name": "★ BOTH WINDOWS",
+     "tested": 2234,
+     "passed": 6
+    },
+    {
+     "name": "12M vs 6M 1:1",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 6M 1:2",
+     "tested": 23,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 1:1",
+     "tested": 55,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 1:2",
+     "tested": 39,
+     "passed": 2
+    },
+    {
+     "name": "12M vs 12M 1:1",
+     "tested": 33,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 12M 1:2",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 12M 1:3",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 12M 2:1",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 12M 2:3",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 12M 3:2",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 6M 1:3",
+     "tested": 49,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 6M 2:1",
+     "tested": 49,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 6M 2:3",
+     "tested": 49,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 6M 3:2",
+     "tested": 49,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 3M 1:1",
+     "tested": 52,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 3M 1:2",
+     "tested": 51,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 3M 1:3",
+     "tested": 51,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 3M 2:1",
+     "tested": 51,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 3M 2:3",
+     "tested": 51,
+     "passed": 0
+    },
+    {
+     "name": "12M vs 3M 3:2",
+     "tested": 51,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 12M 1:1",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 12M 1:2",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 12M 1:3",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 12M 2:1",
+     "tested": 42,
+     "passed": 1
+    },
+    {
+     "name": "6M vs 12M 2:3",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 12M 3:2",
+     "tested": 42,
+     "passed": 6
+    },
+    {
+     "name": "6M vs 6M 1:1",
+     "tested": 26,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 6M 1:2",
+     "tested": 37,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 6M 1:3",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 6M 2:1",
+     "tested": 37,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 6M 2:3",
+     "tested": 50,
+     "passed": 1
+    },
+    {
+     "name": "6M vs 6M 3:2",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 1:3",
+     "tested": 54,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 2:1",
+     "tested": 54,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 2:3",
+     "tested": 54,
+     "passed": 0
+    },
+    {
+     "name": "6M vs 3M 3:2",
+     "tested": 54,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 12M 1:1",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 12M 1:2",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 12M 1:3",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 12M 2:1",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 12M 2:3",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 12M 3:2",
+     "tested": 42,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 6M 1:1",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 6M 1:2",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 6M 1:3",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 6M 2:1",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 6M 2:3",
+     "tested": 50,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 6M 3:2",
+     "tested": 50,
+     "passed": 2
+    },
+    {
+     "name": "3M vs 3M 1:1",
+     "tested": 13,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 3M 1:2",
+     "tested": 39,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 3M 1:3",
+     "tested": 54,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 3M 2:1",
+     "tested": 39,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 3M 2:3",
+     "tested": 54,
+     "passed": 0
+    },
+    {
+     "name": "3M vs 3M 3:2",
+     "tested": 54,
+     "passed": 0
+    }
+   ],
+   "items": [
+    {
+     "id": "sxboth_0",
+     "cat": "★ BOTH WINDOWS",
+     "legs": [
+      {
+       "w": 2,
+       "fam": "3m",
+       "anchor": "U8"
+      },
+      {
+       "w": -1,
+       "fam": "6m",
+       "anchor": "H9"
+      }
+     ],
+     "ok": true,
+     "note": "Range-bound on 120D (p10/p90 -2.5/+0.0, min/max -3.5/+1.0, half-life 2.7, fades 4/4) and still ranging on 60D (z60 +1.02). 6 contracts/unit"
+    },
+    {
+     "id": "sxboth_1",
+     "cat": "★ BOTH WINDOWS",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "H8"
+      },
+      {
+       "w": -3,
+       "fam": "3m",
+       "anchor": "H9"
+      }
+     ],
+     "ok": true,
+     "note": "Range-bound on 120D (p10/p90 -6.0/+0.5, min/max -7.5/+2.5, half-life 4.3, fades 6/6) and still ranging on 60D (z60 +0.66). 8 contracts/unit"
+    },
+    {
+     "id": "sxboth_2",
+     "cat": "★ BOTH WINDOWS",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "12m",
+       "anchor": "H8"
+      },
+      {
+       "w": -3,
+       "fam": "3m",
+       "anchor": "U8"
+      }
+     ],
+     "ok": true,
+     "note": "Range-bound on 120D (p10/p90 -3.0/+0.5, min/max -4.0/+1.5, half-life 2.6, fades 5/5) and still ranging on 60D (z60 +0.47). 8 contracts/unit"
+    },
+    {
+     "id": "sxboth_3",
+     "cat": "★ BOTH WINDOWS",
+     "legs": [
+      {
+       "w": 2,
+       "fam": "6m",
+       "anchor": "M8"
+      },
+      {
+       "w": -3,
+       "fam": "3m",
+       "anchor": "Z8"
+      }
+     ],
+     "ok": true,
+     "note": "Range-bound on 120D (p10/p90 -4.5/+1.0, min/max -6.5/+2.5, half-life 3.7, fades 5/5) and still ranging on 60D (z60 +1.57). 10 contracts/unit"
+    },
+    {
+     "id": "sxboth_4",
+     "cat": "★ BOTH WINDOWS",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "3m",
+       "anchor": "M8"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "U8"
+      }
+     ],
+     "ok": true,
+     "note": "Range-bound on 120D (p10/p90 -3.5/+1.0, min/max -4.5/+2.5, half-life 3.4, fades 3/3) and still ranging on 60D (z60 +1.01). 10 contracts/unit"
+    },
+    {
+     "id": "sxboth_5",
+     "cat": "★ BOTH WINDOWS",
+     "legs": [
+      {
+       "w": 2,
+       "fam": "3m",
+       "anchor": "U9"
+      },
+      {
+       "w": -3,
+       "fam": "3m",
+       "anchor": "M0"
+      }
+     ],
+     "ok": true,
+     "note": "Range-bound on 120D (p10/p90 -6.5/-3.5, min/max -7.5/-2.5, half-life 1.5, fades 10/10) and still ranging on 60D (z60 -0.77). 10 contracts/unit"
+    },
+    {
+     "id": "sx_6Mvs3M1-2_0",
+     "cat": "6M vs 3M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "M8"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "H9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -2.0/+1.0, min/max -2.5/+1.5, half-life 3.6, fades 3/3, rho -0.01"
+    },
+    {
+     "id": "sx_6Mvs3M1-2_1",
+     "cat": "6M vs 3M 1:2",
+     "legs": [
+      {
+       "w": 1,
+       "fam": "6m",
+       "anchor": "U8"
+      },
+      {
+       "w": -2,
+       "fam": "3m",
+       "anchor": "U9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -3.0/+0.0, min/max -3.5/+0.5, half-life 1.6, fades 3/3, rho +0.18"
+    },
+    {
+     "id": "sx_6Mvs12M2-1_0",
+     "cat": "6M vs 12M 2:1",
+     "legs": [
+      {
+       "w": 2,
+       "fam": "6m",
+       "anchor": "U8"
+      },
+      {
+       "w": -1,
+       "fam": "12m",
+       "anchor": "Z8"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -3.5/+0.5, min/max -4.5/+1.0, half-life 2.2, fades 3/3, rho +0.20"
+    },
+    {
+     "id": "sx_6Mvs12M3-2_0",
+     "cat": "6M vs 12M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "6m",
+       "anchor": "U8"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "U9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -15.5/-8.0, min/max -16.0/-6.0, half-life 2.5, fades 4/4, rho +0.11"
+    },
+    {
+     "id": "sx_6Mvs12M3-2_1",
+     "cat": "6M vs 12M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "6m",
+       "anchor": "Z8"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "U9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -13.5/-7.5, min/max -16.0/-6.5, half-life 2.1, fades 5/5, rho +0.12"
+    },
+    {
+     "id": "sx_6Mvs12M3-2_2",
+     "cat": "6M vs 12M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "6m",
+       "anchor": "H9"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -16.5/-11.0, min/max -17.0/-9.0, half-life 1.8, fades 4/4, rho -0.11"
+    },
+    {
+     "id": "sx_6Mvs12M3-2_3",
+     "cat": "6M vs 12M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "6m",
+       "anchor": "Z8"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "Z9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -18.0/-11.5, min/max -20.5/-10.5, half-life 3.2, fades 5/5, rho +0.11"
+    },
+    {
+     "id": "sx_6Mvs12M3-2_4",
+     "cat": "6M vs 12M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "6m",
+       "anchor": "H9"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "H0"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -19.5/-14.0, min/max -21.5/-12.0, half-life 2.7, fades 4/4, rho -0.13"
+    },
+    {
+     "id": "sx_6Mvs12M3-2_5",
+     "cat": "6M vs 12M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "6m",
+       "anchor": "U8"
+      },
+      {
+       "w": -2,
+       "fam": "12m",
+       "anchor": "M9"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -11.5/-5.0, min/max -12.0/-3.0, half-life 1.7, fades 4/4, rho +0.22"
+    },
+    {
+     "id": "sx_6Mvs6M2-3_0",
+     "cat": "6M vs 6M 2:3",
+     "legs": [
+      {
+       "w": 2,
+       "fam": "6m",
+       "anchor": "M9"
+      },
+      {
+       "w": -3,
+       "fam": "6m",
+       "anchor": "M0"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -13.5/-10.0, min/max -14.5/-8.5, half-life 2.4, fades 3/3, rho -0.07"
+    },
+    {
+     "id": "sx_3Mvs6M3-2_0",
+     "cat": "3M vs 6M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "3m",
+       "anchor": "M9"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "M0"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -10.0/-6.5, min/max -10.5/-5.5, half-life 1.7, fades 6/6, rho -0.18"
+    },
+    {
+     "id": "sx_3Mvs6M3-2_1",
+     "cat": "3M vs 6M 3:2",
+     "legs": [
+      {
+       "w": 3,
+       "fam": "3m",
+       "anchor": "H9"
+      },
+      {
+       "w": -2,
+       "fam": "6m",
+       "anchor": "H0"
+      }
+     ],
+     "ok": true,
+     "note": "120D p10/p90 -8.5/-5.5, min/max -10.0/-4.5, half-life 2.0, fades 3/3, rho +0.04"
+    }
+   ]
+  }
+ }
+}
